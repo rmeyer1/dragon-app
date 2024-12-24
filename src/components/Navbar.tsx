@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Navbar.css';
+import logo from '../assets/logo.png';
 
 const Navbar: React.FC = () => {
   const [isActive, setIsActive] = useState(false);
@@ -11,9 +12,11 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-logo">
-        Yb
-      </Link>
+      <div className="navbar-brand">
+        <Link to="/">
+          <img src={logo} alt="Logo" className="navbar-logo" />
+        </Link>
+      </div>
       <div className="navbar-toggle" onClick={handleToggle}>
         <span className="bar"></span>
         <span className="bar"></span>

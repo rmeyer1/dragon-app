@@ -5,10 +5,9 @@ import './AboutPage.css'; // Import your CSS file
 const AboutPage: React.FC = () => {
   return (
     <section className="about-page">
-      <h2>About Me</h2>
+      <h2>About</h2>
       <p>
         {/* Add your overview and work experience here */}
-        I am a passionate developer with experience in...
       </p>
       <div className="git-activity">
         <h3>GitHub Activity</h3>

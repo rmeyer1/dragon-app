@@ -19,9 +19,14 @@
   }
   
   .navbar-logo {
-    color: #026918;
-    font-size: 1.8rem;
-    font-weight: bold;
+    height: 30px;
+    width: auto;
+    margin-right: 10px;
+  }
+  
+  .navbar-brand {
+    display: flex;
+    align-items: center;
   }
   
   .navbar-links {
