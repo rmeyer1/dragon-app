@@ -1,0 +1,25 @@
+/* VideosPage.css */
+
+.videos-page {
+    padding: 2rem;
+    background-color: #000000;
+    min-height: 100vh;
+  }
+  
+  .videos-page h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .videos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .videos-container video {
+    width: 100%;
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+  }
+  

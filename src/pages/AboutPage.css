@@ -1,0 +1,48 @@
+/* AboutPage.css */
+
+.about-page {
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #000000;
+    min-height: 100vh;
+  }
+  
+  .about-page h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .about-page p {
+    font-size: 1.2rem;
+    color: #cccccc;
+  }
+  
+  .git-activity {
+    margin-top: 2rem;
+  /* Add these styles for dark theme */
+  --color-calendar-graph-day-bg: #1a1a1a;
+  --color-calendar-graph-day-L1-bg: #00ffff33;
+  --color-calendar-graph-day-L2-bg: #00ffff66;
+  --color-calendar-graph-day-L3-bg: #00ffff99;
+  --color-calendar-graph-day-L4-bg: #00ffff;
+  color: #cccccc;
+  }
+  /* Style the calendar text */
+.git-activity text {
+  fill: #cccccc;
+}
+
+/* Style the borders */
+.git-activity rect {
+  stroke: #333;
+}
+  
+  .git-activity h3 {
+    margin-bottom: 1rem;
+  }
+  
+  .git-activity .react-github-calendar__legend {
+    justify-content: center;
+  }
+  

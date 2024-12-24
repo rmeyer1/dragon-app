@@ -1,0 +1,96 @@
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background-color: #000000;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  width: 100%;
+  background-color: #000000;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #00ffff;
+}
+
+p {
+  line-height: 1.6;
+}
+
+button {
+  background-color: #00ffff;
+  color: #0e0e0e;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00cccc;
+}
+
+input {
+  padding: 0.5rem;
+  border: 1px solid #555;
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #777;
+}
+/* Add this to your global styles */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ffff;
+  border-radius: 4px;
+}
+/* Apply to elements where appropriate */
+
+.neon-text {
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+}
+
+.neon-border {
+  border: 1px solid #00ffff;
+  box-shadow: 0 0 10px #00ffff;
+}
+body {
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* Ensure html and body are also black and full height */
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background-color: #000000;
+}

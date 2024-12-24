@@ -1,0 +1,146 @@
+/* Navbar.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1a;
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    --navbar-height: 60px;
+    height: var(--navbar-height);
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 100;
+  }
+  
+  .navbar-logo {
+    color: #026918;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+  
+  .navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .navbar-links li a {
+    color: #ffffff;
+    font-size: 1rem;
+    transition: color 0.3s;
+    position: relative;
+  }
+  
+  .navbar-links li a::after {
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #026918;
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    transition: width 0.3s;
+  }
+  
+  .navbar-links li a:hover::after {
+    width: 100%;
+  }
+  
+  .navbar-toggle {
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-links {
+      display: none;
+      flex-direction: column;
+      background-color: #1a1a1a;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      width: 200px;
+      padding: 1rem;
+    }
+  
+    .navbar-links.active {
+      display: flex;
+    }
+  
+    .navbar-toggle {
+      display: block;
+      cursor: pointer;
+    }
+  }
+  /* Add these styles for the navbar toggle */
+
+.navbar-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+  }
+  
+  .navbar-toggle .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #ffffff;
+    margin: 4px 0;
+  }
+  
+  @media (max-width: 768px) {
+    .navbar-toggle {
+      display: flex;
+    }
+  }
+  /* Buttons */
+
+button {
+    position: relative;
+    overflow: hidden;
+    transition: background-color 0.3s;
+  }
+  
+  button::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background-color: rgba(0, 255, 255, 0.2);
+    transform: rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  
+  button:hover::before {
+    opacity: 1;
+  }
+/* Apply to game-card and stock-card */
+
+.card {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: #00ffff;
+    transition: top 0.3s;
+  }
+  
+  .card:hover::before {
+    top: 0;
+  }
+    
+  
