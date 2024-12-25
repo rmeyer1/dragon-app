@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './LandingPage.css';
 
+const words = ['Engineer', 'Technologist', 'Investor'];
+
 const LandingPage: React.FC = () => {
   const [displayText, setDisplayText] = useState('');
-  const words = ['Engineer', 'Technologist', 'Investor'];
   const [wordIndex, setWordIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 

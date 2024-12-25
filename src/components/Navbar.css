@@ -19,14 +19,23 @@
   }
   
   .navbar-logo {
-    height: 30px;
-    width: auto;
-    margin-right: 10px;
+    height: 40px;
+    width: 40px;
+    margin-right: 15px;
+    transition: transform 0.3s ease;
+    filter: brightness(1.2);
   }
   
   .navbar-brand {
     display: flex;
     align-items: center;
+    padding: 8px;
+  }
+  
+  .navbar-brand a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
   }
   
   .navbar-links {
@@ -146,6 +155,11 @@ button {
   
   .card:hover::before {
     top: 0;
+  }
+    
+  /* Optional: Add hover effect */
+  .navbar-logo:hover {
+    transform: scale(1.1);
   }
     
   

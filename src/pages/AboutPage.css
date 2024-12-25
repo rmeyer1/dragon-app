@@ -1,48 +1,164 @@
 /* AboutPage.css */
 
 .about-page {
-    width: 100%;
-    margin: 0 auto;
-    padding: 2rem;
-    background-color: #000000;
-    min-height: 100vh;
-  }
-  
-  .about-page h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .about-page p {
-    font-size: 1.2rem;
-    color: #cccccc;
-  }
-  
-  .git-activity {
-    margin-top: 2rem;
-  /* Add these styles for dark theme */
-  --color-calendar-graph-day-bg: #1a1a1a;
-  --color-calendar-graph-day-L1-bg: #00ffff33;
-  --color-calendar-graph-day-L2-bg: #00ffff66;
-  --color-calendar-graph-day-L3-bg: #00ffff99;
-  --color-calendar-graph-day-L4-bg: #00ffff;
+  width: 100%;
+  min-height: 100vh;
+  padding: 4rem 4rem 6rem;
+  background-color: #000000;
+  color: #ffffff;
+  overflow-y: auto;
+}
+
+.about-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 4rem;
+}
+
+.about-text {
+  flex: 1;
+  max-width: 600px;
+}
+
+.about-text h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+}
+
+.headline {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
   color: #cccccc;
-  }
-  /* Style the calendar text */
+  margin-bottom: 1.5rem;
+}
+
+.additional-text {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #cccccc;
+}
+
+.image-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.profile-image {
+  width: 350px;
+  height: 350px;
+  object-fit: contain;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8e2de2, #4a00e0, #8e2de2);
+  padding: 1rem;
+}
+
+.git-activity {
+  margin-top: 4rem;
+  max-width: 1200px;
+  margin: 4rem auto 2rem;
+  padding-bottom: 2rem;
+}
+
+.git-activity h3 {
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+}
+
+/* Existing GitHub calendar styles */
+.git-activity {
+  --color-calendar-graph-day-bg: #1a1a1a;
+  --color-calendar-graph-day-L1-bg: #39d353aa;
+  --color-calendar-graph-day-L2-bg: #39d353cc;
+  --color-calendar-graph-day-L3-bg: #39d353ee;
+  --color-calendar-graph-day-L4-bg: #39d353;
+  color: #cccccc;
+}
+
 .git-activity text {
   fill: #cccccc;
 }
 
-/* Style the borders */
 .git-activity rect {
   stroke: #333;
 }
-  
-  .git-activity h3 {
-    margin-bottom: 1rem;
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .about-page {
+    padding: 2rem 1rem 4rem;
   }
-  
-  .git-activity .react-github-calendar__legend {
-    justify-content: center;
+
+  .about-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
   }
+
+  .git-activity {
+    margin: 2rem auto;
+    padding: 0 1rem 2rem;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .profile-image {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+.tech-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.tech-icon {
+  font-size: 3rem;
+  color: #ffffff;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.tech-icon:hover {
+  transform: scale(1.1);
+  color: #646cff;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .tech-stack {
+    gap: 1.5rem;
+  }
+
+  .tech-icon {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .tech-stack {
+    gap: 1rem;
+  }
+
+  .tech-icon {
+    font-size: 2rem;
+  }
+}
   
