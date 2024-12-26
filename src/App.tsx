@@ -3,8 +3,7 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 import About from './pages/AboutPage';
 import Videos from './pages/VideoPage';
-import Sports from './pages/SportsPage';
-import Finance from './pages/FinancePage';
+import ContactPage from './pages/ContactPage';
 
 function App() {
   return (
@@ -15,8 +14,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/about" element={<About />} />
           <Route path="/videos" element={<Videos />} />
-          <Route path="/sports" element={<Sports />} />
-          <Route path="/finance" element={<Finance />} />
+          <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </div>
     </Router>

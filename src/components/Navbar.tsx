@@ -26,8 +26,7 @@ const Navbar: React.FC = () => {
         <li><Link to="/" onClick={handleToggle}>Home</Link></li>
         <li><Link to="/about" onClick={handleToggle}>About</Link></li>
         <li><Link to="/videos" onClick={handleToggle}>Videos</Link></li>
-        <li><Link to="/sports" onClick={handleToggle}>Sports</Link></li>
-        <li><Link to="/finance" onClick={handleToggle}>Finance</Link></li>
+        <li><Link to="/contact" onClick={handleToggle}>Contact</Link></li>
       </ul>
     </nav>
   );
