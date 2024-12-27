@@ -4,6 +4,8 @@
   padding: 4rem;
   background-color: #000000;
   color: #ffffff;
+  min-height: -webkit-fill-available;
+  overflow-y: auto;
 }
 
 .contact-page h1 {
@@ -18,6 +20,7 @@
   display: flex;
   flex-direction: column;
   gap: 3rem;
+  height: 100%;
 }
 
 .contact-form {
@@ -78,6 +81,8 @@
   justify-content: center;
   padding: 2rem 0;
   margin-bottom: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .social-icon {
@@ -92,11 +97,29 @@
   transform: translateY(-3px);
 }
 
+/* Safari-specific media query */
+@supports (-webkit-touch-callout: none) {
+  .contact-page {
+    padding-bottom: 8rem;
+  }
+
+  .social-links {
+    margin-bottom: 6rem;
+    padding-bottom: 2rem;
+  }
+
+  .social-icon {
+    position: relative;
+    z-index: 2;
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .contact-page {
     padding: 2rem 1rem;
-    padding-bottom: 6rem;
+    padding-bottom: calc(6rem + env(safe-area-inset-bottom));
   }
   
   .contact-form {
@@ -106,7 +129,7 @@
 
   .social-links {
     padding: 1.5rem 0;
-    margin-bottom: 4rem;
+    margin-bottom: calc(4rem + env(safe-area-inset-bottom));
   }
 
   .social-icon {
