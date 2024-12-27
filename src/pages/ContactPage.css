@@ -19,18 +19,21 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0;
   height: 100%;
+  padding: 0;
 }
 
 .contact-form {
   width: 100%;
   max-width: 600px;
   background: #111111;
-  padding: 2rem;
+  padding: 1.5rem;
+  padding-top: 1rem;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin: 0 auto;
+  margin-top: 0;
 }
 
 .form-group {
@@ -79,6 +82,8 @@
   display: flex;
   justify-content: center;
   gap: 2rem;
+  margin: 0;
+  padding: 0;
   margin-bottom: 0;
 }
 
@@ -86,6 +91,7 @@
   font-size: 2rem;
   color: var(--text-color);
   transition: color 0.3s ease;
+  margin-bottom: 0.5rem;
 }
 
 .social-icon:hover {
@@ -97,6 +103,7 @@
   .contact-page {
     padding: 2rem 1rem;
     padding-bottom: calc(6rem + env(safe-area-inset-bottom));
+    margin-bottom: 0.5rem;
   }
   
   .contact-form {
@@ -106,7 +113,6 @@
 
   .social-links {
     padding: 1.5rem 0;
-    margin-bottom: calc(4rem + env(safe-area-inset-bottom));
   }
 
   .social-icon {
