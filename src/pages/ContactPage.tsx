@@ -10,12 +10,66 @@ const ContactPage: React.FC = () => {
     message: ''
   });
 
+  const [errors, setErrors] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     emailjs.init(import.meta.env.VITE_EMAILJS_PUBLIC_KEY);
   }, []);
 
+  const validateForm = () => {
+    let tempErrors = {
+      name: '',
+      email: '',
+      message: ''
+    };
+    let isValid = true;
+
+    // Name validation
+    if (!formData.name.trim()) {
+      tempErrors.name = 'Name is required';
+      isValid = false;
+    } else if (formData.name.trim().length < 2) {
+      tempErrors.name = 'Name must be at least 2 characters';
+      isValid = false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      tempErrors.email = 'Email is required';
+      isValid = false;
+    } else if (!emailRegex.test(formData.email)) {
+      tempErrors.email = 'Please enter a valid email address';
+      isValid = false;
+    }
+
+    // Message validation
+    if (!formData.message.trim()) {
+      tempErrors.message = 'Message is required';
+      isValid = false;
+    } else if (formData.message.trim().length < 10) {
+      tempErrors.message = 'Message must be at least 10 characters';
+      isValid = false;
+    }
+
+    setErrors(tempErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
     
     try {
       const templateParams = {
@@ -33,9 +87,12 @@ const ContactPage: React.FC = () => {
       
       alert('Message sent successfully!');
       setFormData({ name: '', email: '', message: '' });
+      setErrors({ name: '', email: '', message: '' });
     } catch (error) {
       console.error('Error:', error);
       alert('Failed to send message. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -45,6 +102,13 @@ const ContactPage: React.FC = () => {
       ...prev,
       [name]: value
     }));
+    // Clear error when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   return (
@@ -52,7 +116,7 @@ const ContactPage: React.FC = () => {
       <h1>Contact Me</h1>
       
       <div className="contact-content">
-        <form className="contact-form" data-netlify="true" onSubmit={handleSubmit}>
+        <form className="contact-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label htmlFor="name">Name</label>
             <input
@@ -61,8 +125,10 @@ const ContactPage: React.FC = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
+              className={errors.name ? 'error' : ''}
               required
             />
+            {errors.name && <span className="error-message">{errors.name}</span>}
           </div>
           
           <div className="form-group">
@@ -73,8 +139,10 @@ const ContactPage: React.FC = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              className={errors.email ? 'error' : ''}
               required
             />
+            {errors.email && <span className="error-message">{errors.email}</span>}
           </div>
           
           <div className="form-group">
@@ -84,12 +152,20 @@ const ContactPage: React.FC = () => {
               name="message"
               value={formData.message}
               onChange={handleChange}
+              className={errors.message ? 'error' : ''}
               required
               rows={5}
             />
+            {errors.message && <span className="error-message">{errors.message}</span>}
           </div>
           
-          <button type="submit" className="submit-btn" onClick={handleSubmit}>Send Message</button>
+          <button 
+            type="submit" 
+            className="submit-btn" 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Sending...' : 'Send Message'}
+          </button>
         </form>
 
         <div className="social-links">

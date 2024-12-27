@@ -36,10 +36,12 @@
   @media (max-width: 768px) {
     .videos-page {
       padding: 1rem;
+      padding-bottom: 4rem;
     }
     
     .videos-container {
       gap: 1rem;
+      padding-bottom: 3rem;
     }
   }
   
