@@ -10,12 +10,8 @@ const AboutPage: React.FC = () => {
       <div className="about-content">
         <div className="about-text">
           <h2>About Me</h2>
-          <p className="headline">
-            Full Stack Developer passionate about creating innovative solutions
-          </p>
           <p className="description">
-            Currently, the Lead Quality Engineer at CarMax on the Online Checkout team.  
-            Over 10 years of experience delivering enterprise software solutions in a variety of industries and roles.
+            Senior Quality Engineer at CarMax with over 10 years of experience delivering enterprise software solutions in a variety of industries and roles.
           </p>
           <div className="tech-stack">
             <FaNodeJs className="tech-icon" title="Node.js" />
