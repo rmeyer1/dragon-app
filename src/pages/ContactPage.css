@@ -19,7 +19,7 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 1.5rem;
   height: 100%;
 }
 
@@ -77,42 +77,19 @@
 
 .social-links {
   display: flex;
-  gap: 2rem;
   justify-content: center;
-  padding: 2rem 0;
-  margin-bottom: 2rem;
-  position: relative;
-  z-index: 1;
+  gap: 2rem;
+  margin-bottom: 0;
 }
 
 .social-icon {
-  font-size: 2.5rem;
-  color: #cccccc;
-  transition: all 0.3s ease;
-  padding: 1rem;
+  font-size: 2rem;
+  color: var(--text-color);
+  transition: color 0.3s ease;
 }
 
 .social-icon:hover {
-  color: #00ffff;
-  transform: translateY(-3px);
-}
-
-/* Safari-specific media query */
-@supports (-webkit-touch-callout: none) {
-  .contact-page {
-    padding-bottom: 8rem;
-  }
-
-  .social-links {
-    margin-bottom: 6rem;
-    padding-bottom: 2rem;
-  }
-
-  .social-icon {
-    position: relative;
-    z-index: 2;
-    -webkit-tap-highlight-color: transparent;
-  }
+  color: var(--accent-color);
 }
 
 /* Responsive Design */

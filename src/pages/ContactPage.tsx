@@ -116,6 +116,25 @@ const ContactPage: React.FC = () => {
       <h1>Contact Me</h1>
       
       <div className="contact-content">
+        <div className="social-links">
+          <a 
+            href="https://github.com/rmeyer1" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="social-icon"
+          >
+            <FaGithub />
+          </a>
+          <a 
+            href="https://www.linkedin.com/in/robert-meyer-3a800071/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="social-icon"
+          >
+            <FaLinkedin />
+          </a>
+        </div>
+
         <form className="contact-form" onSubmit={handleSubmit} noValidate>
           <div className="form-group">
             <label htmlFor="name">Name</label>
@@ -167,25 +186,6 @@ const ContactPage: React.FC = () => {
             {isSubmitting ? 'Sending...' : 'Send Message'}
           </button>
         </form>
-
-        <div className="social-links">
-          <a 
-            href="https://github.com/rmeyer1" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="social-icon"
-          >
-            <FaGithub />
-          </a>
-          <a 
-            href="https://www.linkedin.com/in/robert-meyer-3a800071/" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="social-icon"
-          >
-            <FaLinkedin />
-          </a>
-        </div>
       </div>
     </section>
   );

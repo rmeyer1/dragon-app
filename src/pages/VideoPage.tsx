@@ -20,7 +20,7 @@ const VideosPage: React.FC = () => {
       <h2>Drone Shots</h2>
       <div className="videos-container">
         {videoUrls.map((url, index) => (
-          <video key={index} controls poster={url} src={url} />
+          <video key={index} controls src={url} />
         ))}
       </div>
     </section>
