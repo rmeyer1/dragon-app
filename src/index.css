@@ -77,3 +77,16 @@ body, #root {
   width: 100%;
   min-height: 100vh;
 }
+
+/* Improve scrolling on iOS */
+html, body {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+  height: 100%;
+}
+
+/* Prevent content from being hidden behind bottom nav bar on iOS */
+.app-container {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}

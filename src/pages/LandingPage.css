@@ -15,11 +15,13 @@ body, #root {
   height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .landing-page {
-  flex: 1; /* Take up remaining space */
-  width: 100%;
+  flex: 1;
+  width: 100vw;
+  height: 100vh;
   background-image: url('/images/mountain-landscape.png');
   background-size: cover;
   background-position: center;
