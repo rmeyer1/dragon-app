@@ -25,6 +25,7 @@ const Navbar: React.FC = () => {
       <ul className={`navbar-links ${isActive ? 'active' : ''}`}>
         <li><Link to="/" onClick={handleToggle}>Home</Link></li>
         <li><Link to="/about" onClick={handleToggle}>About</Link></li>
+        <li><Link to="/projects" onClick={handleToggle}>Projects</Link></li>
         <li><Link to="/videos" onClick={handleToggle}>Videos</Link></li>
         <li><Link to="/contact" onClick={handleToggle}>Contact</Link></li>
       </ul>

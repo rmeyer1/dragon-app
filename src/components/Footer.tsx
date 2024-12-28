@@ -4,7 +4,7 @@ import './Footer.css'; // Import your CSS file
 const Footer: React.FC = () => {
   return (
     <footer className="footer">
-      <p>&copy; 2023 My Personal App</p>
+      <p>&copy; 2024 Yb </p>
     </footer>
   );
 };
