@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './VideoPage.css';
 
 const VideosPage: React.FC = () => {
   const [videoUrls, setVideoUrls] = useState<string[]>([]);
@@ -16,12 +15,26 @@ const VideosPage: React.FC = () => {
   }, []);
 
   return (
-    <section className="videos-page">
-      <h2>Drone Shots</h2>
-      <div className="videos-container">
-        {videoUrls.map((url, index) => (
-          <video key={index} controls src={url} />
-        ))}
+    <section className="w-full min-h-screen bg-black text-white px-4 py-16">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-16">
+          Drone Shots
+        </h1>
+        
+        <div className="space-y-8">
+          {videoUrls.map((url, index) => (
+            <div 
+              key={index}
+              className="relative rounded-2xl overflow-hidden border-2 border-[#39d353]"
+            >
+              <video 
+                controls 
+                src={url}
+                className="w-full aspect-video bg-black"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

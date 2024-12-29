@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
-import './ContactPage.css';
 
 const ContactPage: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -112,69 +111,94 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <section className="contact-page">
-      <h1>Contact Me</h1>
-      
-      <div className="contact-content">
-        <form className="contact-form" onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={errors.name ? 'error' : ''}
-              required
-            />
-            {errors.name && <span className="error-message">{errors.name}</span>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className={errors.email ? 'error' : ''}
-              required
-            />
-            {errors.email && <span className="error-message">{errors.email}</span>}
-          </div>
-          
-          <div className="form-group">
-            <label htmlFor="message">Message</label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              className={errors.message ? 'error' : ''}
-              required
-              rows={5}
-            />
-            {errors.message && <span className="error-message">{errors.message}</span>}
-          </div>
-          
-          <button 
-            type="submit" 
-            className="submit-btn" 
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Sending...' : 'Send Message'}
-          </button>
-        </form>
-        <div className="social-links">
+    <section className="w-full min-h-screen bg-black text-white px-4 py-16">
+      <div className="max-w-3xl mx-auto space-y-12">
+        <h1 className="text-4xl font-bold text-center mb-16">Contact Me</h1>
+        
+        {/* Form Container */}
+        <div className="bg-[#111111] rounded-2xl p-8">
+          <form onSubmit={handleSubmit} noValidate className="space-y-8">
+            {/* Name Field */}
+            <div className="space-y-2">
+              <label htmlFor="name" className="text-xl text-gray-300">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className={`w-full bg-[#1a1a1a] border ${errors.name ? 'border-red-500' : 'border-gray-600'} 
+                  rounded-lg p-4 text-white focus:outline-none focus:border-purple-500 transition-colors`}
+                required
+              />
+              {errors.name && (
+                <span className="text-red-500 text-sm">{errors.name}</span>
+              )}
+            </div>
+
+            {/* Email Field */}
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-xl text-gray-300">
+                Email
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={`w-full bg-[#1a1a1a] border ${errors.email ? 'border-red-500' : 'border-gray-600'} 
+                  rounded-lg p-4 text-white focus:outline-none focus:border-purple-500 transition-colors`}
+                required
+              />
+              {errors.email && (
+                <span className="text-red-500 text-sm">{errors.email}</span>
+              )}
+            </div>
+
+            {/* Message Field */}
+            <div className="space-y-2">
+              <label htmlFor="message" className="text-xl text-gray-300">
+                Message
+              </label>
+              <textarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                className={`w-full bg-[#1a1a1a] border ${errors.message ? 'border-red-500' : 'border-gray-600'} 
+                  rounded-lg p-4 text-white focus:outline-none focus:border-purple-500 transition-colors`}
+                required
+                rows={6}
+              />
+              {errors.message && (
+                <span className="text-red-500 text-sm">{errors.message}</span>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white text-xl font-medium py-4 
+                rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </button>
+          </form>
+        </div>
+
+        {/* GitHub Link */}
+        <div className="flex justify-center mt-8">
           <a 
             href="https://github.com/rmeyer1" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="social-icon"
+            className="text-white hover:text-purple-500 transition-colors"
           >
-            <FaGithub />
+            <FaGithub className="text-4xl" />
           </a>
         </div>
       </div>
