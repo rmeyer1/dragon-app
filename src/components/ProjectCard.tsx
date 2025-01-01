@@ -1,6 +1,6 @@
 import { Project } from '@/types/project'
 import { FaReact, FaNodeJs } from 'react-icons/fa'
-import { SiTailwindcss, SiTypescript } from 'react-icons/si'
+import { SiTailwindcss, SiTypescript, SiFirebase } from 'react-icons/si'
 
 // Create a mapping object for tech stack icons with their colors
 const techStackIcons: { [key: string]: JSX.Element } = {
@@ -8,6 +8,7 @@ const techStackIcons: { [key: string]: JSX.Element } = {
   'Node.js': <FaNodeJs className="text-[#339933]" />,
   'TypeScript': <SiTypescript className="text-[#3178C6]" />,
   'Tailwind CSS': <SiTailwindcss className="text-[#06B6D4]" />,
+  'Firebase': <SiFirebase className="text-[#FFA000]" />,
 }
 
 interface ProjectCardProps {

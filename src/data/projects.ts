@@ -7,7 +7,7 @@ export const projects: Project[] = [
     description: 'A simulator that allows you to play blackjack against the computer and teaches you basic blackjack strategy.',
     image: '/images/blackjack.png',
     link: 'https://blackjac.netlify.app/',
-    techStack: ['React', 'Node.js', 'Tailwind CSS'],
+    techStack: ['React', 'Node.js', 'Tailwind CSS', 'Firebase'],
   },
   // Add more projects here
 ]
