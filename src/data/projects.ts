@@ -9,5 +9,13 @@ export const projects: Project[] = [
     link: 'https://blackjac.netlify.app/',
     techStack: ['React', 'Node.js', 'Tailwind CSS', 'Firebase'],
   },
+  {
+    id: '2',
+    name: 'Hermes',
+    description: 'Live sportsbook odds platform for the NFL, NBA, NHL, and more.',
+    image: '/images/sportsbook.jpg',
+    link: 'https://hermes-odds.netlify.app/',
+    techStack: ['React', 'Node.js', 'Tailwind CSS', 'Firebase'],
+  },
   // Add more projects here
 ]
