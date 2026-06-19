@@ -2,10 +2,13 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-black/90 backdrop-blur-sm py-4 px-4 fixed bottom-0 left-0">
-      <div className="max-w-7xl mx-auto">
-        <p className="text-gray-400 text-center text-sm">
-          &copy; 2024 Yb
+    <footer className="w-full border-t border-slate-200 bg-[#f2f2ed] px-5 py-8">
+      <div className="mx-auto flex max-w-6xl flex-col gap-2 text-sm font-semibold text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <p>
+          &copy; 2026 Rob Meyer
+        </p>
+        <p>
+          Built for QR scans, quick context, and useful follow-up.
         </p>
       </div>
     </footer>

@@ -22,7 +22,7 @@ const ContactPage: React.FC = () => {
   }, []);
 
   const validateForm = () => {
-    let tempErrors = {
+    const tempErrors = {
       name: '',
       email: '',
       message: ''
