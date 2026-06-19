@@ -221,9 +221,14 @@ const SignalDeckPage = () => {
               </div>
               <div className="mt-6 grid gap-5">
                 {caseStudyProjects.map((project) => (
-                  <article key={project.id} className="grid overflow-hidden rounded-2xl border border-slate-200 md:grid-cols-[220px_1fr]">
-                    <img src={project.image} alt="" className="h-full min-h-48 w-full object-cover" />
-                    <div className="p-5">
+                  <article
+                    key={project.id}
+                    className="grid min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white md:grid-cols-[220px_minmax(0,1fr)]"
+                  >
+                    <div className="h-44 min-w-0 bg-slate-950 md:h-auto md:min-h-full">
+                      <img src={project.image} alt="" className="h-full w-full object-cover" />
+                    </div>
+                    <div className="relative z-10 min-w-0 bg-white p-5">
                       <p className="text-xs font-black uppercase tracking-[0.18em] text-teal-700">{project.tagline}</p>
                       <h3 className="mt-2 text-2xl font-black">{project.name}</h3>
                       <div className="mt-4 grid gap-3 leading-7 text-slate-600">
