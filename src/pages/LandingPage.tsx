@@ -1,56 +1,10 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
 import { ArrowUpRight } from 'lucide-react';
-
-type SignalMode = 'engineer' | 'product' | 'investor';
-
-interface SignalModeConfig {
-  id: SignalMode;
-  label: string;
-  accent: string;
-  secondary: string;
-  hot: string;
-  energy: string[];
-  glow: string;
-  surface: string;
-}
-
-const signalModes: SignalModeConfig[] = [
-  {
-    id: 'engineer',
-    label: 'Engineer',
-    accent: '#22c55e',
-    secondary: '#5eead4',
-    hot: '#ecfeff',
-    energy: ['#22c55e', '#5eead4', '#a7f3d0', '#38bdf8'],
-    glow: 'rgba(34, 197, 94, 0.42)',
-    surface: '#020806',
-  },
-  {
-    id: 'product',
-    label: 'Product',
-    accent: '#f97316',
-    secondary: '#a855f7',
-    hot: '#fff7ed',
-    energy: ['#f97316', '#fb923c', '#f472b6', '#a855f7'],
-    glow: 'rgba(249, 115, 22, 0.42)',
-    surface: '#0c0502',
-  },
-  {
-    id: 'investor',
-    label: 'Investor',
-    accent: '#2563eb',
-    secondary: '#d946ef',
-    hot: '#7dd3fc',
-    energy: ['#2563eb', '#38bdf8', '#a855f7', '#fb923c'],
-    glow: 'rgba(37, 99, 235, 0.42)',
-    surface: '#020511',
-  },
-];
 
 const hasWebGLSupport = () => {
   try {
@@ -61,185 +15,111 @@ const hasWebGLSupport = () => {
   }
 };
 
-const nextSignalMode = (mode: SignalMode): SignalMode => {
-  const index = signalModes.findIndex((item) => item.id === mode);
-  return signalModes[(index + 1) % signalModes.length].id;
-};
+const orbitParticles = Array.from({ length: 56 }, (_, index) => {
+  const angle = (index / 56) * Math.PI * 2;
+  const band = index % 3;
+  const radius = band === 0 ? 1.72 : band === 1 ? 2.08 : 2.42;
+  const y = Math.sin(angle * 2.4) * (band === 2 ? 0.32 : 0.22);
 
-const orbSpecs = [
-  { radius: 0.56, position: [-1.7, 0.8, 0], velocity: [0.72, 0.48, 0.28], role: 'accent' },
-  { radius: 0.42, position: [1.5, 0.68, -0.4], velocity: [-0.54, 0.5, 0.36], role: 'secondary' },
-  { radius: 0.68, position: [0.25, -0.2, 0.25], velocity: [0.4, -0.66, -0.3], role: 'accent' },
-  { radius: 0.32, position: [-0.6, -0.95, -0.2], velocity: [-0.62, 0.42, 0.34], role: 'secondary' },
-  { radius: 0.46, position: [2.0, -0.72, 0.12], velocity: [-0.46, -0.56, -0.26], role: 'accent' },
-  { radius: 0.28, position: [-2.05, -0.42, -0.3], velocity: [0.5, -0.4, 0.3], role: 'secondary' },
-] as const;
+  return {
+    id: index,
+    position: [Math.cos(angle) * radius, y, Math.sin(angle) * radius * 0.42] as const,
+    size: band === 1 ? 0.032 : 0.024,
+    color: band === 0 ? '#5eead4' : band === 1 ? '#f8fafc' : '#f97316',
+  };
+});
 
-const sparkOffsets = [
-  [-0.42, 0.18, 0.12],
-  [0.34, -0.2, 0.2],
-  [0.1, 0.42, -0.18],
-  [-0.18, -0.36, -0.1],
-  [0.44, 0.12, -0.22],
-] as const;
+const SignalCore = ({ reducedMotion }: { reducedMotion: boolean }) => {
+  const rootRef = useRef<THREE.Group>(null);
+  const coreRef = useRef<THREE.Mesh>(null);
+  const particleRef = useRef<THREE.Group>(null);
 
-const SignalModulesMesh = ({
-  mode,
-  reducedMotion,
-}: {
-  mode: SignalModeConfig;
-  reducedMotion: boolean;
-}) => {
-  const groupRef = useRef<THREE.Group>(null);
-  const orbRefs = useRef<Array<THREE.Group | null>>([]);
-  const positions = useRef(orbSpecs.map((orb) => new THREE.Vector3(...orb.position)));
-  const velocities = useRef(orbSpecs.map((orb) => new THREE.Vector3(...orb.velocity)));
-  const bounds = { x: 2.35, y: 1.25, z: 0.7 };
-  const glowTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 256;
+  useFrame(({ clock, pointer }) => {
+    const elapsed = clock.elapsedTime;
 
-    const context = canvas.getContext('2d');
-
-    if (context) {
-      const gradient = context.createRadialGradient(128, 128, 0, 128, 128, 128);
-      gradient.addColorStop(0, 'rgba(255,255,255,1)');
-      gradient.addColorStop(0.2, 'rgba(255,255,255,0.72)');
-      gradient.addColorStop(0.52, 'rgba(255,255,255,0.22)');
-      gradient.addColorStop(1, 'rgba(255,255,255,0)');
-      context.fillStyle = gradient;
-      context.fillRect(0, 0, 256, 256);
+    if (rootRef.current) {
+      rootRef.current.rotation.x = -0.14 + pointer.y * 0.08;
+      rootRef.current.rotation.y = elapsed * 0.18 + pointer.x * 0.14;
     }
 
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.needsUpdate = true;
-    return texture;
-  }, []);
-
-  useFrame(({ clock, pointer }, delta) => {
-    if (!groupRef.current) {
-      return;
+    if (coreRef.current && !reducedMotion) {
+      coreRef.current.rotation.x = elapsed * 0.34;
+      coreRef.current.rotation.y = elapsed * 0.46;
+      const pulse = 1 + Math.sin(elapsed * 1.4) * 0.025;
+      coreRef.current.scale.setScalar(pulse);
     }
 
-    groupRef.current.rotation.y = pointer.x * 0.08;
-    groupRef.current.rotation.x = -pointer.y * 0.04;
-
-    orbSpecs.forEach((orb, index) => {
-      const orbGroup = orbRefs.current[index];
-
-      if (!orbGroup) {
-        return;
-      }
-
-      if (!reducedMotion) {
-        const position = positions.current[index];
-        const velocity = velocities.current[index];
-
-        position.addScaledVector(velocity, delta);
-
-        if (Math.abs(position.x) + orb.radius > bounds.x) {
-          velocity.x *= -1;
-          position.x = Math.sign(position.x) * (bounds.x - orb.radius);
-        }
-
-        if (Math.abs(position.y) + orb.radius > bounds.y) {
-          velocity.y *= -1;
-          position.y = Math.sign(position.y) * (bounds.y - orb.radius);
-        }
-
-        if (Math.abs(position.z) + orb.radius > bounds.z) {
-          velocity.z *= -1;
-          position.z = Math.sign(position.z) * (bounds.z - orb.radius);
-        }
-
-        orbGroup.position.copy(position);
-      }
-
-      orbGroup.rotation.x = clock.elapsedTime * 0.18 + index;
-      orbGroup.rotation.y = clock.elapsedTime * 0.22 + index * 0.4;
-    });
+    if (particleRef.current && !reducedMotion) {
+      particleRef.current.rotation.y = -elapsed * 0.42;
+      particleRef.current.rotation.z = Math.sin(elapsed * 0.45) * 0.08;
+    }
   });
 
-  const colorForRole = (role: (typeof orbSpecs)[number]['role']) => {
-    if (role === 'accent') return mode.accent;
-    if (role === 'secondary') return mode.secondary;
-    return mode.accent;
-  };
-
   return (
-    <group ref={groupRef}>
-      {orbSpecs.map((orb, index) => (
-        <group
-          key={`${orb.role}-${index}`}
-          ref={(orbGroup) => {
-            orbRefs.current[index] = orbGroup;
-          }}
-          position={orb.position}
-        >
-          <pointLight color={colorForRole(orb.role)} intensity={1.8} distance={orb.radius * 4.2} />
-          <sprite scale={[orb.radius * 3.1, orb.radius * 3.1, 1]}>
-            <spriteMaterial
-              map={glowTexture}
-              color={colorForRole(orb.role)}
-              blending={THREE.AdditiveBlending}
-              depthWrite={false}
-              opacity={0.48}
-              transparent
-            />
-          </sprite>
-          <mesh>
-            <sphereGeometry args={[orb.radius, 64, 64]} />
-            <meshPhysicalMaterial
-              color={colorForRole(orb.role)}
-              emissive={colorForRole(orb.role)}
-              emissiveIntensity={1.05}
-              metalness={0}
-              opacity={0.5}
-              roughness={0.1}
-              transmission={0.28}
-              transparent
-              depthWrite={false}
-            />
+    <group ref={rootRef} position={[0.9, 0.05, 0]} scale={1.08}>
+      <pointLight color="#5eead4" intensity={7} distance={7} position={[-1.9, 1.2, 2.2]} />
+      <pointLight color="#f97316" intensity={4.2} distance={6} position={[2.2, -1.2, 2.4]} />
+      <pointLight color="#a855f7" intensity={3.6} distance={6} position={[0.2, 1.8, -1.4]} />
+
+      <mesh ref={coreRef}>
+        <icosahedronGeometry args={[0.78, 2]} />
+        <meshPhysicalMaterial
+          color="#dffdf8"
+          emissive="#5eead4"
+          emissiveIntensity={0.55}
+          metalness={0.05}
+          opacity={0.68}
+          roughness={0.05}
+          transmission={0.42}
+          transparent
+        />
+      </mesh>
+
+      <mesh rotation={[Math.PI / 2.15, 0, 0]}>
+        <torusGeometry args={[1.45, 0.014, 14, 180]} />
+        <meshBasicMaterial color="#5eead4" transparent opacity={0.58} />
+      </mesh>
+      <mesh rotation={[Math.PI / 2.9, Math.PI / 5, Math.PI / 7]}>
+        <torusGeometry args={[1.9, 0.01, 12, 180]} />
+        <meshBasicMaterial color="#f8fafc" transparent opacity={0.34} />
+      </mesh>
+      <mesh rotation={[Math.PI / 1.7, -Math.PI / 4, Math.PI / 9]}>
+        <torusGeometry args={[2.32, 0.009, 12, 180]} />
+        <meshBasicMaterial color="#f97316" transparent opacity={0.4} />
+      </mesh>
+      <mesh rotation={[Math.PI / 2, Math.PI / 2.85, 0]}>
+        <torusKnotGeometry args={[1.62, 0.008, 220, 12, 2, 3]} />
+        <meshBasicMaterial color="#a855f7" transparent opacity={0.28} />
+      </mesh>
+
+      <group ref={particleRef}>
+        {orbitParticles.map((particle) => (
+          <mesh key={particle.id} position={particle.position}>
+            <sphereGeometry args={[particle.size, 12, 12]} />
+            <meshBasicMaterial color={particle.color} transparent opacity={0.82} />
           </mesh>
-          <mesh>
-            <sphereGeometry args={[orb.radius * 0.36, 32, 32]} />
-            <meshBasicMaterial
-              color={mode.hot}
-              blending={THREE.AdditiveBlending}
-              opacity={0.54}
-              transparent
-              depthWrite={false}
-            />
-          </mesh>
-          {sparkOffsets.map(([x, y, z], sparkIndex) => (
-            <mesh
-              key={`${index}-${sparkIndex}`}
-              position={[x * orb.radius, y * orb.radius, z * orb.radius]}
-            >
-              <sphereGeometry args={[orb.radius * 0.026, 12, 12]} />
-              <meshBasicMaterial
-                color={sparkIndex % 2 === 0 ? mode.hot : mode.secondary}
-                blending={THREE.AdditiveBlending}
-                depthWrite={false}
-                opacity={0.52}
-                transparent
-              />
-            </mesh>
-          ))}
-        </group>
-      ))}
+        ))}
+      </group>
+
+      <mesh position={[0, 0, -0.08]} scale={[1.22, 1.22, 1.22]}>
+        <sphereGeometry args={[2.72, 48, 48]} />
+        <meshBasicMaterial color="#5eead4" wireframe transparent opacity={0.045} />
+      </mesh>
     </group>
   );
 };
 
-const SignalModules = ({
-  mode,
-  onCycle,
-}: {
-  mode: SignalModeConfig;
-  onCycle: () => void;
-}) => {
+const FallbackCore = () => (
+  <div className="absolute inset-0 grid place-items-center bg-[#050b0c]">
+    <div className="relative h-[70vmin] w-[70vmin]">
+      <div className="absolute inset-0 rounded-full border border-teal-200/30 shadow-[0_0_110px_rgba(45,212,191,0.28)]" />
+      <div className="absolute inset-[16%] rounded-full border border-orange-200/30" />
+      <div className="absolute inset-[34%] rounded-full bg-teal-200/20 blur-xl" />
+    </div>
+  </div>
+);
+
+const LandingScene = () => {
   const prefersReducedMotion = useReducedMotion();
   const [supportsWebGL, setSupportsWebGL] = useState(false);
 
@@ -248,106 +128,49 @@ const SignalModules = ({
   }, []);
 
   if (!supportsWebGL || prefersReducedMotion) {
-    return (
-      <button
-        type="button"
-        onClick={onCycle}
-        className="relative flex aspect-[1.55] w-full items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-[#11141a] shadow-2xl"
-        style={{ boxShadow: `0 32px 120px ${mode.glow}` }}
-        aria-label={`Current mode: ${mode.label}. Cycle signal mode.`}
-      >
-        <span className="absolute inset-0 grid place-items-center text-4xl font-black uppercase tracking-[0.18em] text-white/92 md:text-7xl">
-          {mode.label}
-        </span>
-        <div className="grid grid-cols-3 gap-3">
-          {Array.from({ length: 9 }).map((_, index) => (
-            <span
-              key={index}
-              className="h-14 w-14 rounded-full border border-white/20 opacity-70 blur-[0.5px]"
-              style={{
-                background: `radial-gradient(circle at 50% 50%, ${mode.hot}, ${index % 2 === 0 ? mode.accent : mode.secondary} 52%, transparent 74%)`,
-                boxShadow: `0 0 28px ${index % 2 === 0 ? mode.accent : mode.secondary}`,
-              }}
-            />
-          ))}
-        </div>
-      </button>
-    );
+    return <FallbackCore />;
   }
 
   return (
-    <button
-      type="button"
-      onClick={onCycle}
-      className="relative h-[360px] w-full overflow-hidden rounded-2xl border border-black/10 outline-none transition focus-visible:ring-2 focus-visible:ring-white/70 md:h-[510px]"
-      style={{ background: mode.surface, boxShadow: `0 30px 110px ${mode.glow}` }}
-      aria-label={`Current mode: ${mode.label}. Cycle signal mode.`}
-    >
-      <Canvas camera={{ position: [0, 0, 5.2], fov: 42 }} dpr={[1, 1.8]}>
-        <Suspense fallback={null}>
-          <color attach="background" args={[mode.surface]} />
-          <ambientLight intensity={0.28} />
-          <directionalLight position={[3, 4, 6]} intensity={1.2} />
-          <pointLight position={[-3.4, 1.8, 3]} color={mode.accent} intensity={16} distance={8} />
-          <pointLight position={[3.2, -1.7, 2.5]} color={mode.secondary} intensity={11} distance={7} />
-          <pointLight position={[0, 0, 3]} color={mode.hot} intensity={6} distance={5} />
-          <SignalModulesMesh mode={mode} reducedMotion={Boolean(prefersReducedMotion)} />
-          <Environment preset="studio" />
-        </Suspense>
-      </Canvas>
-      <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center text-center">
-        <span className="block text-4xl font-black uppercase tracking-[0.18em] text-white drop-shadow-[0_4px_28px_rgba(0,0,0,0.65)] md:text-7xl">
-          {mode.label}
-        </span>
-      </div>
-    </button>
+    <Canvas camera={{ position: [0, 0, 6.2], fov: 42 }} dpr={[1, 1.7]} gl={{ antialias: true, alpha: false }}>
+      <Suspense fallback={null}>
+        <color attach="background" args={['#050b0c']} />
+        <fog attach="fog" args={['#050b0c', 5.8, 11]} />
+        <ambientLight intensity={0.28} />
+        <directionalLight position={[2.4, 3.8, 4.2]} intensity={1.05} />
+        <SignalCore reducedMotion={Boolean(prefersReducedMotion)} />
+        <Environment preset="city" />
+      </Suspense>
+    </Canvas>
   );
 };
 
 const LandingPage = () => {
-  const [signalMode, setSignalMode] = useState<SignalMode>('engineer');
-
-  useEffect(() => {
-    const cycleTimer = window.setTimeout(() => {
-      setSignalMode((mode) => nextSignalMode(mode));
-    }, 5000);
-
-    return () => window.clearTimeout(cycleTimer);
-  }, [signalMode]);
-
-  const currentMode = useMemo(
-    () => signalModes.find((mode) => mode.id === signalMode) ?? signalModes[0],
-    [signalMode],
-  );
-
   return (
-    <div className="min-h-screen overflow-hidden bg-[#f2f2ed] text-slate-950">
-      <section id="intro" className="relative min-h-screen overflow-hidden px-5 pb-10 pt-24 md:px-8">
-        <div
-          className="absolute inset-x-0 top-0 h-[52vh] opacity-80"
-          style={{
-            background: `radial-gradient(circle at 70% 10%, ${currentMode.glow}, transparent 42%)`,
-          }}
-        />
+    <div className="min-h-screen overflow-hidden bg-[#050b0c] text-white">
+      <section id="intro" className="relative min-h-screen overflow-hidden">
+        <div className="absolute inset-0">
+          <LandingScene />
+        </div>
 
-        <div className="relative mx-auto flex min-h-[calc(100vh-8rem)] max-w-6xl flex-col justify-center gap-8">
-          <header className="flex justify-center">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_68%_45%,rgba(45,212,191,0.08),transparent_31%),linear-gradient(90deg,rgba(5,11,12,0.9)_0%,rgba(5,11,12,0.46)_42%,rgba(5,11,12,0.12)_100%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[48vh] bg-gradient-to-t from-[#050b0c] via-[#050b0c]/74 to-transparent" />
+
+        <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl items-end px-5 pb-12 pt-28 md:px-8 md:pb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="flex w-full flex-col gap-5 sm:w-auto"
+          >
+            <p className="text-sm font-black uppercase tracking-[0.32em] text-teal-200">Rob Meyer</p>
             <Link
               to="/profile"
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-slate-950 px-7 text-sm font-black uppercase tracking-[0.16em] text-white transition hover:bg-slate-800"
+              className="inline-flex min-h-12 w-fit items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-black uppercase tracking-[0.14em] text-slate-950 transition hover:bg-teal-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#050b0c]"
             >
-              Open Profile
+              Enter portfolio
               <ArrowUpRight className="h-4 w-4" />
             </Link>
-          </header>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: 'easeOut' }}
-            className="relative"
-          >
-            <SignalModules mode={currentMode} onCycle={() => setSignalMode((mode) => nextSignalMode(mode))} />
           </motion.div>
         </div>
       </section>
