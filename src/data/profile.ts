@@ -8,7 +8,7 @@ import type {
 
 export const profileSummary: ProfileSummary = {
   name: 'Rob Meyer',
-  headline: 'Technology and engineering leader focused on leading technology teams, enterprise AI research and implementation, and product delivery.',
+  headline: 'Engineering manager focused on automation, delivery systems, and practical AI workflows for software teams.',
   location: 'Columbus, OH',
   email: 'rob.a.meyer@outlook.com',
   githubUrl: 'https://github.com/rmeyer1',
@@ -41,29 +41,30 @@ export const proofMetrics: ProofMetric[] = [
   {
     id: 'experience',
     value: '10+',
-    label: 'Years leading delivery',
-    description: 'Automation strategy and implementation, technical team lead and mentor, and hands-on experience across multiple business verticals.',
+    label: 'Years in software delivery',
+    description:
+      'Hands-on automation work, technical leadership, team mentoring, and delivery ownership across multiple business verticals.',
   },
   {
     id: 'product',
     value: 'Product',
-    label: 'Backlog, epics, and acceptance criteria',
+    label: 'Backlogs, epics, and acceptance criteria',
     description:
-      'Experience writing epics, maintaining and prioritizing backlogs, and defining clear technical and business acceptance criteria for engineering teams.',
+      'Experience turning business needs into clear engineering work, prioritized backlogs, and acceptance criteria teams can actually build against.',
   },
   {
     id: 'projects',
     value: 'Discovery',
     label: 'Customer and business insight',
     description:
-      'Worked with designers on UI direction, created A/B tests for enterprise software, conducted customer interviews, and translated business and operations gaps into software solutions.',
+      'Worked with designers on UI direction, shaped A/B tests, conducted customer interviews, and translated operational gaps into software improvements.',
   },
   {
     id: 'impact',
     value: 'Highlights',
-    label: 'Revenue-critical delivery and executive storytelling',
+    label: 'Revenue-critical delivery',
     description:
-      'Lead Quality Engineer for Online Checkout, a high-visibility product generating $20M-$25M per quarter where execution had to be precise and release confidence mattered. Winner of the 2023 CarMax Hackathon after leading Be My Co-Buyer and presenting the solution to multiple VPs and the CIO.',
+      'Led quality engineering for Online Checkout, a high-visibility product generating $20M-$25M per quarter. Won the 2023 CarMax Hackathon after leading Be My Co-Buyer and presenting the solution to multiple VPs and the CIO.',
   },
 ];
 
@@ -78,16 +79,16 @@ export const storyChapters: StoryChapter[] = [
   {
     id: 'ai',
     label: '02',
-    title: 'Focused on AI workflows',
+    title: 'Practical AI workflows',
     body:
-      'More recently, my attention has shifted toward AI, agent-based workflows, and the ways these tools can change how teams build products.',
+      'I am most interested in AI when it removes real delivery friction: clearer handoffs, faster feedback, better test coverage, and less manual coordination.',
   },
   {
     id: 'product',
     label: '03',
-    title: 'Product-focused',
+    title: 'Product-minded',
     body:
-      'I am drawn to product work because it sits at the intersection of business needs, customer experience, and technical execution. It is the direction I am intentionally moving toward in the next stage of my career.',
+      'I like work that sits close to the customer problem, where business context, user experience, and technical tradeoffs have to be held together.',
   },
 ];
 
@@ -97,11 +98,11 @@ export const caseStudyProjects: CaseStudyProject[] = [
     name: 'Alpha Dog',
     tagline: 'Options strategy decision dashboard',
     problem:
-      'A wheel-strategy options dashboard built to rank income opportunities only after risk, liquidity, technical context, and assignment quality are considered.',
+      'A wheel-strategy options dashboard that ranks income opportunities only after risk, liquidity, technical context, and assignment quality are considered.',
     role:
-      'Product concept, requirements shaping, technical documentation, dashboard UX, and Next.js implementation.',
+      'Shaped the product concept, requirements, technical docs, dashboard UX, and Next.js implementation.',
     outcome:
-      'Live Vercel deployment with implementation docs covering REST-first architecture, API contracts, data modeling, ranking algorithms, and frontend UX behavior.',
+      'Published a live Vercel deployment with implementation docs for REST-first architecture, API contracts, data modeling, ranking algorithms, and frontend behavior.',
     image: '/images/alpha-dog.svg',
     link: 'https://alpha-dog.vercel.app/',
     repositoryUrl: 'https://github.com/rmeyer1/alpha-dog',
@@ -114,7 +115,7 @@ export const caseStudyProjects: CaseStudyProject[] = [
     problem:
       'A backend agent that turns official SEC EDGAR filings into structured, auditable financial intelligence for downstream apps and agent workflows.',
     role:
-      'Backend architecture, SEC ingestion flow, structured analysis design, persistence model, API surface, and optional MCP tooling.',
+      'Designed the backend architecture, SEC ingestion flow, structured analysis layer, persistence model, API surface, and optional MCP tooling.',
     outcome:
       'Today it supports ticker-to-CIK lookup, filing discovery, archive retrieval, XBRL fact extraction, OpenAI structured output, Supabase or local JSONL persistence, FastAPI endpoints, and scheduled GitHub Actions ingestion.',
     image: '/images/signal-scribe.svg',
@@ -127,9 +128,9 @@ export const caseStudyProjects: CaseStudyProject[] = [
     tagline: 'Strategy trainer and simulator',
     problem:
       'Make blackjack strategy easier to learn through a playable interface instead of static charts.',
-    role: 'Product concept, React implementation, game flow, UI states, and deployment.',
+    role: 'Designed the product concept, React implementation, game flow, UI states, and deployment path.',
     outcome:
-      'Live project available. Replace this placeholder with usage, learning, or technical outcome metrics when ready.',
+      'Shipped a playable strategy trainer with responsive game states. Next step: add practice-session metrics and error-rate tracking.',
     image: '/images/blackjack.png',
     link: 'https://blackjac.netlify.app/',
     techStack: ['React', 'Node.js', 'Tailwind CSS', 'Firebase'],
