@@ -23,7 +23,7 @@ const experienceHighlights = [
     period: 'Feb. 2026 - Present',
     details: [
       'Manage a 25-person engineering team across four business verticals.',
-      'Help lead DevEx initiatives that design, pilot, and deploy team-level AI agents.',
+      'Lead DevEx pilots that design, test, and deploy team-level AI agents.',
       'Translate delivery progress and complex technical initiatives to key technical and business stakeholders.',
     ],
   },
@@ -34,7 +34,7 @@ const experienceHighlights = [
     details: [
       'Supported 30+ quality engineers as an internal consultant and technical leader.',
       'Standardized UI and API automation on Microsoft Playwright with shared framework templates.',
-      'Advanced AI-native quality workflows through proprietary agent design and prototyping.',
+      'Prototyped AI-assisted quality workflows for test planning, execution support, and delivery visibility.',
     ],
   },
   {
@@ -70,6 +70,9 @@ const competencyGroups = [
   'Executive Communication',
 ];
 
+const focusRing =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white';
+
 const SignalDeckPage = () => {
   return (
     <div className="min-h-screen bg-[#f2f2ed] px-5 pb-14 pt-24 text-slate-950 md:px-8">
@@ -97,7 +100,10 @@ const SignalDeckPage = () => {
             </p>
 
             <div className="mt-6 grid gap-3 text-sm">
-              <a href={`mailto:${profileSummary.email}`} className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 font-semibold">
+              <a
+                href={`mailto:${profileSummary.email}`}
+                className={`flex items-center gap-3 rounded-xl bg-slate-50 p-3 font-semibold transition hover:bg-slate-100 ${focusRing}`}
+              >
                 <Mail className="h-4 w-4 text-teal-600" />
                 {profileSummary.email}
               </a>
@@ -109,7 +115,7 @@ const SignalDeckPage = () => {
                 href={profileSummary.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 font-semibold"
+                className={`flex items-center gap-3 rounded-xl bg-slate-50 p-3 font-semibold transition hover:bg-slate-100 ${focusRing}`}
               >
                 <FaGithub className="h-4 w-4 text-teal-600" />
                 GitHub
@@ -118,7 +124,7 @@ const SignalDeckPage = () => {
                 href={profileSummary.linkedinUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 rounded-xl bg-slate-50 p-3 font-semibold"
+                className={`flex items-center gap-3 rounded-xl bg-slate-50 p-3 font-semibold transition hover:bg-slate-100 ${focusRing}`}
               >
                 <FaLinkedin className="h-4 w-4 text-teal-600" />
                 LinkedIn
@@ -130,7 +136,7 @@ const SignalDeckPage = () => {
             <section id="about" className="min-w-0 max-w-full overflow-hidden scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-8">
               <div className="flex items-center gap-3">
                 <Sparkles className="h-6 w-6 text-teal-600" />
-                <h2 className="text-3xl font-black tracking-normal">About Me</h2>
+                <h2 className="text-3xl font-black tracking-normal">Profile</h2>
               </div>
               <div className="mt-6 grid gap-4 md:grid-cols-3">
                 {storyChapters.map((chapter) => (
@@ -140,77 +146,6 @@ const SignalDeckPage = () => {
                     <p className="mt-3 text-sm leading-6 text-slate-600">{chapter.body}</p>
                   </article>
                 ))}
-              </div>
-            </section>
-
-            <section id="resume" className="min-w-0 max-w-full overflow-hidden scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-8">
-              <div className="flex items-center gap-3">
-                <BriefcaseBusiness className="h-6 w-6 text-teal-600" />
-                <h2 className="text-3xl font-black tracking-normal">Resume</h2>
-              </div>
-              <div className="mt-6 grid gap-4 md:grid-cols-2">
-                {proofMetrics.map((metric) => (
-                  <article key={metric.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                    <p className="text-4xl font-black">{metric.value}</p>
-                    <h3 className="mt-2 text-lg font-black">{metric.label}</h3>
-                    <p className="mt-3 leading-7 text-slate-600">{metric.description}</p>
-                  </article>
-                ))}
-              </div>
-              <div className="mt-6 grid gap-4">
-                {experienceHighlights.map((item) => (
-                  <article key={`${item.company}-${item.period}`} className="rounded-2xl border border-slate-200 bg-white p-5">
-                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-                      <div>
-                        <p className="text-xs font-black uppercase tracking-[0.18em] text-teal-700">{item.company}</p>
-                        <h3 className="mt-2 text-xl font-black">{item.role}</h3>
-                      </div>
-                      <p className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-slate-500">
-                        {item.period}
-                      </p>
-                    </div>
-                    <ul className="mt-4 grid gap-2 text-sm leading-6 text-slate-600">
-                      {item.details.map((detail) => (
-                        <li key={detail}>- {detail}</li>
-                      ))}
-                    </ul>
-                  </article>
-                ))}
-              </div>
-              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                <p className="font-black">Core competencies</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {competencyGroups.map((competency) => (
-                    <span key={competency} className="rounded-full bg-white px-3 py-2 text-xs font-bold text-slate-600">
-                      {competency}
-                    </span>
-                  ))}
-                </div>
-                <p className="mt-5 text-sm leading-6 text-slate-600">
-                  Education: BBA in Management Information Systems, Ohio University.
-                </p>
-              </div>
-            </section>
-
-            <section id="activity" className="min-w-0 max-w-full overflow-hidden scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-8">
-              <div className="flex items-center gap-3">
-                <Code2 className="h-6 w-6 text-teal-600" />
-                <h2 className="text-3xl font-black tracking-normal">GitHub Activity</h2>
-              </div>
-              <p className="mt-4 max-w-2xl leading-7 text-slate-600">
-                A quick signal of ongoing building, experimentation, and code activity.
-              </p>
-              <div className="mt-6 overflow-x-auto rounded-2xl border border-slate-200 bg-slate-950 p-4">
-                <GitHubCalendar
-                  username="rmeyer1"
-                  blockSize={12}
-                  blockMargin={4}
-                  fontSize={12}
-                  hideColorLegend
-                  hideMonthLabels
-                  year="last"
-                  colorScheme="dark"
-                />
               </div>
             </section>
 
@@ -249,7 +184,7 @@ const SignalDeckPage = () => {
                             href={project.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white"
+                            className={`inline-flex items-center gap-2 rounded-full bg-slate-950 px-4 py-2 text-sm font-black text-white transition hover:bg-slate-800 ${focusRing}`}
                           >
                             Live project
                             <ArrowUpRight className="h-4 w-4" />
@@ -260,7 +195,7 @@ const SignalDeckPage = () => {
                             href={project.repositoryUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-black text-slate-950"
+                            className={`inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-black text-slate-950 transition hover:border-slate-400 hover:bg-slate-50 ${focusRing}`}
                           >
                             Code
                             <ArrowUpRight className="h-4 w-4" />
@@ -273,13 +208,97 @@ const SignalDeckPage = () => {
               </div>
             </section>
 
+            <section id="resume" className="min-w-0 max-w-full overflow-hidden scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-8">
+              <div className="flex items-center gap-3">
+                <BriefcaseBusiness className="h-6 w-6 text-teal-600" />
+                <h2 className="text-3xl font-black tracking-normal">Resume</h2>
+              </div>
+              <div className="mt-6 grid gap-4 md:grid-cols-2">
+                {proofMetrics.map((metric) => (
+                  <article key={metric.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                    <p className="text-4xl font-black">{metric.value}</p>
+                    <h3 className="mt-2 text-lg font-black">{metric.label}</h3>
+                    <p className="mt-3 leading-7 text-slate-600">{metric.description}</p>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-6 grid gap-4">
+                {experienceHighlights.map((item) => (
+                  <article key={`${item.company}-${item.period}`} className="rounded-2xl border border-slate-200 bg-white p-5">
+                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <p className="text-xs font-black uppercase tracking-[0.18em] text-teal-700">{item.company}</p>
+                        <h3 className="mt-2 text-xl font-black">{item.role}</h3>
+                      </div>
+                      <p className="rounded-full bg-slate-100 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-slate-500">
+                        {item.period}
+                      </p>
+                    </div>
+                    <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-slate-600 marker:text-teal-600">
+                      {item.details.map((detail) => (
+                        <li key={detail}>{detail}</li>
+                      ))}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <p className="font-black">Core competencies</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {competencyGroups.map((competency) => (
+                    <span key={competency} className="rounded-full bg-white px-3 py-2 text-xs font-bold text-slate-600">
+                      {competency}
+                    </span>
+                  ))}
+                </div>
+                <p className="mt-5 text-sm leading-6 text-slate-600">
+                  Education: BBA in Management Information Systems, Ohio University.
+                </p>
+              </div>
+            </section>
+
+            <section id="activity" className="min-w-0 max-w-full overflow-hidden scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-8">
+              <div className="flex items-center gap-3">
+                <Code2 className="h-6 w-6 text-teal-600" />
+                <h2 className="text-3xl font-black tracking-normal">Recent GitHub Activity</h2>
+              </div>
+              <p className="mt-4 max-w-2xl leading-7 text-slate-600">
+                Recent public GitHub activity.
+              </p>
+              <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-950 p-4 text-white sm:hidden">
+                <p className="text-3xl font-black">1,184</p>
+                <p className="mt-1 text-sm font-semibold text-slate-300">contributions in the last year</p>
+                <a
+                  href={profileSummary.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`mt-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-slate-950 transition hover:bg-slate-100 ${focusRing}`}
+                >
+                  View GitHub
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+              </div>
+              <div className="mt-6 hidden overflow-x-auto rounded-2xl border border-slate-200 bg-slate-950 p-4 sm:block">
+                <GitHubCalendar
+                  username="rmeyer1"
+                  blockSize={12}
+                  blockMargin={4}
+                  fontSize={12}
+                  hideColorLegend
+                  hideMonthLabels
+                  year="last"
+                  colorScheme="dark"
+                />
+              </div>
+            </section>
+
             <section id="contact" className="min-w-0 max-w-full overflow-hidden scroll-mt-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm md:p-8">
               <div className="flex items-center gap-3">
                 <MessageSquare className="h-6 w-6 text-teal-600" />
                 <h2 className="text-3xl font-black tracking-normal">Contact</h2>
               </div>
               <div className="mt-6 grid gap-4 md:grid-cols-3">
-                <a href={`mailto:${profileSummary.email}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-5 font-black">
+                <a href={`mailto:${profileSummary.email}`} className={`rounded-2xl border border-slate-200 bg-slate-50 p-5 font-black transition hover:bg-slate-100 ${focusRing}`}>
                   Email
                   <span className="mt-2 block text-sm font-semibold text-slate-600">{profileSummary.email}</span>
                 </a>
@@ -287,7 +306,7 @@ const SignalDeckPage = () => {
                   href={profileSummary.githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-5 font-black"
+                  className={`rounded-2xl border border-slate-200 bg-slate-50 p-5 font-black transition hover:bg-slate-100 ${focusRing}`}
                 >
                   GitHub
                   <span className="mt-2 block text-sm font-semibold text-slate-600">View code and projects</span>
@@ -296,10 +315,10 @@ const SignalDeckPage = () => {
                   href={profileSummary.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-2xl border border-slate-200 bg-slate-50 p-5 font-black"
+                  className={`rounded-2xl border border-slate-200 bg-slate-50 p-5 font-black transition hover:bg-slate-100 ${focusRing}`}
                 >
                   LinkedIn
-                  <span className="mt-2 block text-sm font-semibold text-slate-600">Connect professionally</span>
+                  <span className="mt-2 block text-sm font-semibold text-slate-600">Connect on LinkedIn</span>
                 </a>
               </div>
             </section>
