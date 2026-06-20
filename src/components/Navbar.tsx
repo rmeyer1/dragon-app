@@ -17,9 +17,11 @@ const Navbar = () => {
           className="flex items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
         >
           <img src={logo} alt="Rob Meyer logo" className="h-9 w-9 rounded-md object-cover" />
-          <span className={`hidden text-sm font-black uppercase tracking-[0.2em] sm:inline ${isLanding ? 'text-white' : 'text-slate-950'}`}>
-            Rob Meyer
-          </span>
+          {!isLanding && (
+            <span className="hidden text-sm font-black uppercase tracking-[0.2em] text-slate-950 sm:inline">
+              Rob Meyer
+            </span>
+          )}
         </Link>
       </nav>
     </header>
