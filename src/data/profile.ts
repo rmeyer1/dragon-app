@@ -40,10 +40,10 @@ export const intentPaths: IntentPath[] = [
 export const proofMetrics: ProofMetric[] = [
   {
     id: 'experience',
-    value: '10+',
-    label: 'Years in software delivery',
+    value: 'Engineering',
+    label: 'Automation, quality, and delivery systems',
     description:
-      'Hands-on automation work, technical leadership, team mentoring, and delivery ownership across multiple business verticals.',
+      'Hands-on quality engineering, automation strategy, technical leadership, team mentoring, and delivery ownership across multiple business verticals.',
   },
   {
     id: 'product',
