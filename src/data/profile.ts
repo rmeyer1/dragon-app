@@ -43,7 +43,7 @@ export const proofMetrics: ProofMetric[] = [
     value: 'Engineering',
     label: 'Software development and Automation',
     description:
-      'Hands-on software development, automation strategy, technical leadership, team mentoring, and delivery ownership across multiple business verticals.',
+      'Technical leadership, team mentoring, and delivery ownership across enterprise product teams, with a focus on turning complex work into reliable software outcomes.',
   },
   {
     id: 'product',
