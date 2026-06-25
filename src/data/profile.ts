@@ -41,9 +41,9 @@ export const proofMetrics: ProofMetric[] = [
   {
     id: 'experience',
     value: 'Engineering',
-    label: 'Automation, quality, and delivery systems',
+    label: 'Software development and delivery systems',
     description:
-      'Hands-on quality engineering, automation strategy, technical leadership, team mentoring, and delivery ownership across multiple business verticals.',
+      'Hands-on software development, automation strategy, technical leadership, team mentoring, and delivery ownership across multiple business verticals.',
   },
   {
     id: 'product',
