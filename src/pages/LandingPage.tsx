@@ -16,7 +16,7 @@ const hasWebGLSupport = () => {
 };
 
 const navItems = [
-  { label: 'Profile', href: '/profile' },
+  { label: 'Resume', href: '/profile' },
   { label: 'LinkedIn', href: profileSummary.linkedinUrl, external: true },
   { label: 'GitHub', href: profileSummary.githubUrl, external: true },
 ];
@@ -253,7 +253,7 @@ const LandingPage = () => {
           transition={{ delay: 0.12, duration: 0.65, ease: 'easeOut' }}
         >
           <Link
-            className="rounded-sm text-xs font-black uppercase tracking-[0.32em] text-cyan-200/90 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#020611]"
+            className="rounded-sm text-xs font-black uppercase tracking-[0.32em] text-cyan-200/90 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#020611] md:text-sm"
             to="/profile"
           >
             Rob Meyer

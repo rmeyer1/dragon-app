@@ -12,7 +12,7 @@ export const profileSummary: ProfileSummary = {
   location: 'Columbus, OH',
   email: 'rob.a.meyer@outlook.com',
   githubUrl: 'https://github.com/rmeyer1',
-  linkedinUrl: 'https://www.linkedin.com/in/robmeyer03/',
+  linkedinUrl: 'https://www.linkedin.com/in/rob-meyer-3a800071/',
   resumeUrl: '#contact',
   intro:
     'I help teams reduce manual effort, improve delivery visibility, and turn complex technical work into clear business outcomes.',
