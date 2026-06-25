@@ -8,7 +8,7 @@ import type {
 
 export const profileSummary: ProfileSummary = {
   name: 'Rob Meyer',
-  headline: 'Engineering & Product leader focused on automation, delivery systems, and practical AI workflows for software teams.',
+  headline: 'Engineering & Product leader focused on enterprise software delivery, product enablement, and practical AI workflows for software teams.',
   location: 'Columbus, OH',
   email: 'rob.a.meyer@outlook.com',
   githubUrl: 'https://github.com/rmeyer1',
