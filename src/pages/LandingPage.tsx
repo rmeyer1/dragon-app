@@ -21,6 +21,8 @@ const navItems = [
   { label: 'GitHub', href: profileSummary.githubUrl, external: true },
 ];
 
+const randomBetween = (min: number, max: number) => min + Math.random() * (max - min);
+
 const atmosphereVertexShader = `
   varying vec3 vNormal;
 
@@ -156,27 +158,71 @@ const StarField = ({ reducedMotion }: { reducedMotion: boolean }) => {
 
 const Meteor = ({ reducedMotion }: { reducedMotion: boolean }) => {
   const meteorRef = useRef<THREE.Group>(null);
+  const scheduleRef = useRef({
+    duration: 2.35,
+    endY: 0.95,
+    nextStart: 0,
+    rotation: -0.38,
+    startY: 2.45,
+  });
 
   useFrame(({ clock }) => {
     if (!meteorRef.current) return;
 
-    const cycle = reducedMotion ? 0.28 : (clock.elapsedTime * 0.22) % 1;
-    const x = THREE.MathUtils.lerp(-4.3, 0.35, cycle);
-    const y = THREE.MathUtils.lerp(2.45, 0.95, cycle);
-    const z = THREE.MathUtils.lerp(0.18, 0.42, cycle);
-    const opacity = reducedMotion ? 0.46 : Math.sin(Math.PI * cycle);
+    const elapsed = clock.elapsedTime;
+    const schedule = scheduleRef.current;
 
-    meteorRef.current.position.set(x, y, z);
-    meteorRef.current.rotation.z = -0.38;
-    meteorRef.current.visible = opacity > 0.08;
+    if (reducedMotion) {
+      meteorRef.current.position.set(-2.4, 1.9, 0.28);
+      meteorRef.current.rotation.z = -0.36;
+      meteorRef.current.visible = true;
+    } else {
+      if (schedule.nextStart === 0) {
+        schedule.nextStart = elapsed + randomBetween(0.25, 0.9);
+      }
 
-    meteorRef.current.children.forEach((child) => {
+      if (elapsed < schedule.nextStart) {
+        meteorRef.current.visible = false;
+        return;
+      }
+
+      const cycle = (elapsed - schedule.nextStart) / schedule.duration;
+
+      if (cycle >= 1) {
+        schedule.duration = randomBetween(1.85, 2.75);
+        schedule.endY = randomBetween(0.74, 1.18);
+        schedule.nextStart = elapsed + randomBetween(4.8, 12);
+        schedule.rotation = randomBetween(-0.43, -0.31);
+        schedule.startY = randomBetween(2.32, 2.72);
+        meteorRef.current.visible = false;
+        return;
+      }
+
+      const easedCycle = THREE.MathUtils.smoothstep(cycle, 0, 1);
+      const x = THREE.MathUtils.lerp(-3.8, 0.92, easedCycle);
+      const y = THREE.MathUtils.lerp(schedule.startY, schedule.endY, easedCycle);
+      const z = THREE.MathUtils.lerp(0.12, 0.5, easedCycle);
+      const opacity = 0.32 + Math.sin(Math.PI * cycle) * 0.68;
+
+      meteorRef.current.position.set(x, y, z);
+      meteorRef.current.rotation.z = schedule.rotation;
+      meteorRef.current.visible = opacity > 0.08;
+    }
+
+    const opacity = reducedMotion
+      ? 0.54
+      : 0.32 + Math.sin(Math.PI * ((elapsed - schedule.nextStart) / schedule.duration)) * 0.68;
+
+    meteorRef.current.traverse((child) => {
       const material = (child as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
       const materials = Array.isArray(material) ? material : material ? [material] : [];
 
       materials.forEach((entry) => {
         if ('opacity' in entry) {
-          entry.opacity = opacity;
+          const baseOpacity =
+            typeof entry.userData.baseOpacity === 'number' ? entry.userData.baseOpacity : 1;
+
+          entry.opacity = baseOpacity * opacity;
         }
       });
     });
@@ -184,36 +230,74 @@ const Meteor = ({ reducedMotion }: { reducedMotion: boolean }) => {
 
   return (
     <group ref={meteorRef}>
-      <mesh position={[0.28, 0, 0]}>
-        <sphereGeometry args={[0.045, 18, 18]} />
+      <mesh position={[0.14, 0, 0]}>
+        <icosahedronGeometry args={[0.088, 1]} />
         <meshBasicMaterial
           blending={THREE.AdditiveBlending}
           color="#fff7ed"
+          depthTest={false}
           depthWrite={false}
-          opacity={0.7}
+          opacity={0}
           transparent
+          userData={{ baseOpacity: 1 }}
         />
       </mesh>
-      <mesh position={[-0.42, 0, 0]} scale={[0.96, 0.05, 0.05]}>
+      <mesh position={[0.12, 0, 0]} scale={[1.7, 1.7, 1.7]}>
+        <sphereGeometry args={[0.092, 18, 18]} />
+        <meshBasicMaterial
+          blending={THREE.AdditiveBlending}
+          color="#fef3c7"
+          depthTest={false}
+          depthWrite={false}
+          opacity={0}
+          transparent
+          userData={{ baseOpacity: 0.22 }}
+        />
+      </mesh>
+      <mesh position={[-0.34, 0.01, 0]} scale={[1.12, 0.075, 0.075]}>
+        <sphereGeometry args={[1, 24, 8]} />
+        <meshBasicMaterial
+          blending={THREE.AdditiveBlending}
+          color="#fbbf24"
+          depthTest={false}
+          depthWrite={false}
+          opacity={0}
+          transparent
+          userData={{ baseOpacity: 0.38 }}
+        />
+      </mesh>
+      <mesh position={[-0.86, -0.01, 0]} scale={[1.38, 0.048, 0.048]}>
         <sphereGeometry args={[1, 24, 8]} />
         <meshBasicMaterial
           blending={THREE.AdditiveBlending}
           color="#67e8f9"
+          depthTest={false}
           depthWrite={false}
-          opacity={0.36}
+          opacity={0}
           transparent
+          userData={{ baseOpacity: 0.3 }}
         />
       </mesh>
-      <mesh position={[-0.92, 0, 0]} scale={[1.42, 0.032, 0.032]}>
-        <sphereGeometry args={[1, 24, 8]} />
-        <meshBasicMaterial
-          blending={THREE.AdditiveBlending}
-          color="#f59e0b"
-          depthWrite={false}
-          opacity={0.22}
-          transparent
-        />
-      </mesh>
+      {[
+        [-0.24, 0.05, 0, 0.038, '#fff7ed', 0.78],
+        [-0.45, -0.04, 0.01, 0.032, '#fbbf24', 0.62],
+        [-0.68, 0.045, -0.01, 0.027, '#fde68a', 0.5],
+        [-0.96, -0.02, 0, 0.022, '#67e8f9', 0.38],
+        [-1.26, 0.03, 0.01, 0.017, '#bae6fd', 0.3],
+      ].map(([x, y, z, size, color, baseOpacity]) => (
+        <mesh key={`${x}-${y}`} position={[x as number, y as number, z as number]}>
+          <sphereGeometry args={[size as number, 12, 12]} />
+          <meshBasicMaterial
+            blending={THREE.AdditiveBlending}
+            color={color as string}
+            depthTest={false}
+            depthWrite={false}
+            opacity={0}
+            transparent
+            userData={{ baseOpacity }}
+          />
+        </mesh>
+      ))}
     </group>
   );
 };
@@ -292,9 +376,112 @@ const LandingNavLink = ({
   );
 };
 
+type MeteorPass = {
+  duration: number;
+  endY: number;
+  id: number;
+  rotation: number;
+  startedAt: number;
+  startY: number;
+};
+
+const MeteorOverlay = ({ reducedMotion }: { reducedMotion: boolean }) => {
+  const [pass, setPass] = useState<MeteorPass | null>(null);
+  const meteorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+
+    let timeoutId: number;
+
+    const queuePass = (wait: number) => {
+      timeoutId = window.setTimeout(() => {
+        const duration = randomBetween(7.2, 9.5);
+
+        setPass({
+          duration,
+          endY: randomBetween(26, 42),
+          id: Date.now(),
+          rotation: randomBetween(-18, -12),
+          startedAt: Date.now(),
+          startY: randomBetween(12, 25),
+        });
+
+        queuePass(duration * 1000 + randomBetween(4800, 12000));
+      }, wait);
+    };
+
+    queuePass(randomBetween(80, 420));
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [reducedMotion]);
+
+  useEffect(() => {
+    if (!pass) return undefined;
+
+    let frameId = 0;
+
+    const tick = () => {
+      const nextProgress = Math.min((Date.now() - pass.startedAt) / (pass.duration * 1000), 1);
+      const easedProgress = THREE.MathUtils.smoothstep(nextProgress, 0, 1);
+      const opacity =
+        nextProgress < 0.14
+          ? nextProgress / 0.14
+          : nextProgress < 0.72
+            ? THREE.MathUtils.lerp(1, 0.76, (nextProgress - 0.14) / 0.58)
+            : THREE.MathUtils.lerp(0.76, 0, (nextProgress - 0.72) / 0.28);
+      const x = THREE.MathUtils.lerp(-20, 42, easedProgress);
+      const y = THREE.MathUtils.lerp(pass.startY, pass.endY, easedProgress);
+
+      if (meteorRef.current) {
+        meteorRef.current.style.opacity = String(opacity);
+        meteorRef.current.style.transform = `translate3d(${x}vw, ${y}vh, 0) rotate(${pass.rotation}deg)`;
+      }
+
+      if (nextProgress < 1) {
+        frameId = window.requestAnimationFrame(tick);
+      } else if (meteorRef.current) {
+        meteorRef.current.style.opacity = '0';
+      }
+    };
+
+    frameId = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [pass]);
+
+  if (!pass) return null;
+
+  return (
+    <div
+      key={pass.id}
+      ref={meteorRef}
+      aria-hidden="true"
+      className="pointer-events-none absolute left-0 top-0 z-10 h-20 w-72 origin-right"
+      style={{
+        opacity: 0,
+        transform: `translate3d(-20vw, ${pass.startY}vh, 0) rotate(${pass.rotation}deg)`,
+      }}
+    >
+      <span className="absolute right-2 top-1/2 size-5 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,#fff7ed_0%,#fbbf24_34%,rgba(251,191,36,0.32)_58%,transparent_74%)] blur-[0.5px]" />
+      <span className="absolute right-0 top-1/2 size-12 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,247,237,0.42),rgba(125,211,252,0.16)_42%,transparent_68%)] blur-sm" />
+      <span className="absolute right-8 top-1/2 h-3 w-56 -translate-y-1/2 rounded-full bg-gradient-to-l from-amber-200/70 via-cyan-200/28 to-transparent blur-md" />
+      <span className="absolute right-10 top-[42%] h-1.5 w-40 rounded-full bg-gradient-to-l from-white/62 via-amber-200/20 to-transparent blur-[2px]" />
+      <span className="absolute right-20 top-[36%] size-1.5 rounded-full bg-amber-100/80" />
+      <span className="absolute right-28 top-[58%] size-1 rounded-full bg-cyan-100/70" />
+      <span className="absolute right-44 top-[46%] size-1 rounded-full bg-white/55" />
+    </div>
+  );
+};
+
 const LandingPage = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [cursorPosition, setCursorPosition] = useState({ x: -80, y: -80 });
+  const prefersReducedMotion = useReducedMotion();
 
   return (
     <div
@@ -310,6 +497,21 @@ const LandingPage = () => {
 
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_74%_38%,rgba(56,189,248,0.16),transparent_30%),radial-gradient(circle_at_78%_64%,rgba(168,85,247,0.09),transparent_30%),linear-gradient(90deg,rgba(2,6,17,0.96)_0%,rgba(2,6,17,0.68)_38%,rgba(2,6,17,0.08)_100%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[44vh] bg-gradient-to-t from-[#020611] via-[#020611]/78 to-transparent" />
+        <MeteorOverlay reducedMotion={Boolean(prefersReducedMotion)} />
+
+        <motion.header
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute left-5 top-6 z-20 md:left-10 md:top-8"
+          initial={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.55, ease: 'easeOut' }}
+        >
+          <Link
+            className="rounded-sm text-base font-black uppercase tracking-[0.22em] text-white transition hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#020611] md:text-lg"
+            to="/profile"
+          >
+            Rob Meyer
+          </Link>
+        </motion.header>
 
         <motion.nav
           animate={{ opacity: 1, y: 0 }}
