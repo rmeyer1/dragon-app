@@ -16,12 +16,9 @@ const hasWebGLSupport = () => {
 };
 
 const navItems = [
-  { label: 'Work', href: '/profile#projects' },
-  { label: 'Systems', href: '/profile#about' },
   { label: 'Profile', href: '/profile' },
-  { label: 'Contact', href: '/profile#contact' },
-  { label: 'GitHub', href: profileSummary.githubUrl, external: true },
   { label: 'LinkedIn', href: profileSummary.linkedinUrl, external: true },
+  { label: 'GitHub', href: profileSummary.githubUrl, external: true },
 ];
 
 const atmosphereVertexShader = `
@@ -43,17 +40,17 @@ const atmosphereFragmentShader = `
 `;
 
 const makeStarPositions = () => {
-  const positions = new Float32Array(900);
+  const positions = new Float32Array(3000);
 
   for (let index = 0; index < positions.length; index += 3) {
     const seed = index + 1;
-    const radius = 7.5 + ((seed * 19) % 100) / 28;
-    const theta = ((seed * 97) % 360) * (Math.PI / 180);
-    const phi = Math.acos(2 * (((seed * 53) % 100) / 100) - 1);
+    const x = (((seed * 37) % 1000) / 1000) * 9.2 - 4.6;
+    const y = (((seed * 71) % 1000) / 1000) * 5.4 - 2.7;
+    const z = -2.2 - (((seed * 131) % 1000) / 1000) * 4.6;
 
-    positions[index] = radius * Math.sin(phi) * Math.cos(theta);
-    positions[index + 1] = radius * Math.sin(phi) * Math.sin(theta);
-    positions[index + 2] = -Math.abs(radius * Math.cos(phi)) - 1.5;
+    positions[index] = x;
+    positions[index + 1] = y;
+    positions[index + 2] = z;
   }
 
   return positions;
@@ -152,8 +149,72 @@ const StarField = ({ reducedMotion }: { reducedMotion: boolean }) => {
           count={positions.length / 3}
         />
       </bufferGeometry>
-      <pointsMaterial color="#d8f3ff" opacity={0.72} size={0.018} sizeAttenuation transparent />
+      <pointsMaterial color="#f0fbff" opacity={0.96} size={0.034} sizeAttenuation transparent />
     </points>
+  );
+};
+
+const Meteor = ({ reducedMotion }: { reducedMotion: boolean }) => {
+  const meteorRef = useRef<THREE.Group>(null);
+
+  useFrame(({ clock }) => {
+    if (!meteorRef.current) return;
+
+    const cycle = reducedMotion ? 0.28 : (clock.elapsedTime * 0.22) % 1;
+    const x = THREE.MathUtils.lerp(-4.3, 0.35, cycle);
+    const y = THREE.MathUtils.lerp(2.45, 0.95, cycle);
+    const z = THREE.MathUtils.lerp(0.18, 0.42, cycle);
+    const opacity = reducedMotion ? 0.46 : Math.sin(Math.PI * cycle);
+
+    meteorRef.current.position.set(x, y, z);
+    meteorRef.current.rotation.z = -0.38;
+    meteorRef.current.visible = opacity > 0.08;
+
+    meteorRef.current.children.forEach((child) => {
+      const material = (child as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined;
+      const materials = Array.isArray(material) ? material : material ? [material] : [];
+
+      materials.forEach((entry) => {
+        if ('opacity' in entry) {
+          entry.opacity = opacity;
+        }
+      });
+    });
+  });
+
+  return (
+    <group ref={meteorRef}>
+      <mesh position={[0.28, 0, 0]}>
+        <sphereGeometry args={[0.045, 18, 18]} />
+        <meshBasicMaterial
+          blending={THREE.AdditiveBlending}
+          color="#fff7ed"
+          depthWrite={false}
+          opacity={0.7}
+          transparent
+        />
+      </mesh>
+      <mesh position={[-0.42, 0, 0]} scale={[0.96, 0.05, 0.05]}>
+        <sphereGeometry args={[1, 24, 8]} />
+        <meshBasicMaterial
+          blending={THREE.AdditiveBlending}
+          color="#67e8f9"
+          depthWrite={false}
+          opacity={0.36}
+          transparent
+        />
+      </mesh>
+      <mesh position={[-0.92, 0, 0]} scale={[1.42, 0.032, 0.032]}>
+        <sphereGeometry args={[1, 24, 8]} />
+        <meshBasicMaterial
+          blending={THREE.AdditiveBlending}
+          color="#f59e0b"
+          depthWrite={false}
+          opacity={0.22}
+          transparent
+        />
+      </mesh>
+    </group>
   );
 };
 
@@ -163,6 +224,7 @@ const SpaceScene = ({ reducedMotion }: { reducedMotion: boolean }) => (
     <directionalLight color="#f8fbff" intensity={3.1} position={[-4, 2.4, 4.4]} />
     <pointLight color="#67e8f9" distance={9} intensity={0.9} position={[2.2, 1.1, 2]} />
     <StarField reducedMotion={reducedMotion} />
+    <Meteor reducedMotion={reducedMotion} />
     <Earth reducedMotion={reducedMotion} />
   </>
 );
@@ -249,37 +311,6 @@ const LandingPage = () => {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_74%_38%,rgba(56,189,248,0.16),transparent_30%),radial-gradient(circle_at_78%_64%,rgba(168,85,247,0.09),transparent_30%),linear-gradient(90deg,rgba(2,6,17,0.96)_0%,rgba(2,6,17,0.68)_38%,rgba(2,6,17,0.08)_100%)]" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[44vh] bg-gradient-to-t from-[#020611] via-[#020611]/78 to-transparent" />
 
-        <motion.header
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute inset-x-0 top-0 z-20 flex items-start justify-between px-5 pt-6 md:px-10 md:pt-8"
-          initial={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.55, ease: 'easeOut' }}
-        >
-          <Link
-            className="rounded-sm text-lg font-black uppercase tracking-[0.28em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#020611] md:text-xl"
-            to="/profile"
-          >
-            R0BFOLIO
-          </Link>
-          <div className="hidden max-w-[260px] text-right text-[11px] font-bold uppercase leading-5 tracking-[0.2em] text-cyan-100/78 md:block">
-            Product systems / practical AI / delivery signal
-          </div>
-        </motion.header>
-
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="pointer-events-none absolute left-5 top-[54%] z-10 max-w-[330px] -translate-y-1/2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] md:left-10"
-          initial={{ opacity: 0, y: 18 }}
-          transition={{ delay: 0.12, duration: 0.65, ease: 'easeOut' }}
-        >
-          <p className="text-xs font-black uppercase tracking-[0.32em] text-cyan-200/90">
-            Rob Meyer
-          </p>
-          <p className="mt-4 text-3xl font-black uppercase leading-none tracking-normal text-white sm:text-5xl">
-            Signal over noise.
-          </p>
-        </motion.div>
-
         <motion.nav
           animate={{ opacity: 1, y: 0 }}
           aria-label="Landing navigation"
@@ -287,14 +318,7 @@ const LandingPage = () => {
           initial={{ opacity: 0, y: 16 }}
           transition={{ delay: 0.22, duration: 0.55, ease: 'easeOut' }}
         >
-          <div className="grid w-full grid-cols-[auto_repeat(6,minmax(0,1fr))] items-center gap-7">
-            <Link
-              aria-label="Enter portfolio"
-              className="grid size-9 place-items-center rounded-sm text-4xl font-light leading-none text-white transition hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#020611]"
-              to="/profile"
-            >
-              +
-            </Link>
+          <div className="ml-auto grid w-full max-w-[660px] grid-cols-3 items-center gap-7">
             {navItems.map((item) => (
               <LandingNavLink
                 external={item.external}
