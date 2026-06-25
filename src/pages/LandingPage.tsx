@@ -248,7 +248,7 @@ const LandingPage = () => {
 
         <motion.header
           animate={{ opacity: 1, y: 0 }}
-          className="absolute left-5 top-[54%] z-20 -translate-y-1/2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] md:left-10"
+          className="absolute left-5 top-[calc(54%+5px)] z-20 -translate-y-1/2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] md:left-[31vw] md:top-[54%]"
           initial={{ opacity: 0, y: 18 }}
           transition={{ delay: 0.12, duration: 0.65, ease: 'easeOut' }}
         >
