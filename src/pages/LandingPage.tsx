@@ -4,7 +4,8 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { motion, useReducedMotion } from 'framer-motion';
 import * as THREE from 'three';
-import { ArrowUpRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { profileSummary } from '@/data/profile';
 
 const hasWebGLSupport = () => {
   try {
@@ -15,39 +16,91 @@ const hasWebGLSupport = () => {
   }
 };
 
-type OrbConfig = {
+type SignalFormConfig = {
   id: string;
   basePosition: [number, number, number];
-  scale: number;
+  colorA: string;
+  colorB: string;
+  colorC: string;
   drift: [number, number, number];
-  speed: number;
   phase: number;
+  scale: [number, number, number];
+  speed: number;
 };
 
-const orbConfigs: OrbConfig[] = [
-  { id: 'primary', basePosition: [1.34, 0.2, 0], scale: 1.28, drift: [0.46, 0.28, 0.42], speed: 0.74, phase: 0 },
-  { id: 'upper-left', basePosition: [-1.05, 0.92, -0.7], scale: 0.62, drift: [0.38, 0.24, 0.34], speed: 0.9, phase: 1.8 },
-  { id: 'lower-right', basePosition: [2.32, -1.18, 0.52], scale: 0.48, drift: [0.32, 0.2, 0.3], speed: 1.05, phase: 3.4 },
-  { id: 'lower-center', basePosition: [-0.26, -1.18, 0.28], scale: 0.42, drift: [0.3, 0.18, 0.28], speed: 0.86, phase: 4.7 },
+const signalForms: SignalFormConfig[] = [
+  {
+    id: 'core',
+    basePosition: [1.08, 0.08, -0.1],
+    colorA: '#5ee7ff',
+    colorB: '#8b5cf6',
+    colorC: '#f59e0b',
+    drift: [0.42, 0.22, 0.22],
+    phase: 0,
+    scale: [2.05, 1.76, 1.16],
+    speed: 0.34,
+  },
+  {
+    id: 'left-signal',
+    basePosition: [-1.38, 0.72, -0.58],
+    colorA: '#14f1d9',
+    colorB: '#4f46e5',
+    colorC: '#f8fafc',
+    drift: [0.28, 0.2, 0.16],
+    phase: 1.8,
+    scale: [0.86, 0.72, 0.62],
+    speed: 0.42,
+  },
+  {
+    id: 'lower-pulse',
+    basePosition: [-0.52, -1.3, -0.2],
+    colorA: '#22d3ee',
+    colorB: '#a855f7',
+    colorC: '#f97316',
+    drift: [0.24, 0.18, 0.16],
+    phase: 3.2,
+    scale: [0.72, 0.58, 0.5],
+    speed: 0.38,
+  },
+  {
+    id: 'right-node',
+    basePosition: [2.5, -1.0, -0.44],
+    colorA: '#7dd3fc',
+    colorB: '#c084fc',
+    colorC: '#facc15',
+    drift: [0.26, 0.18, 0.2],
+    phase: 4.4,
+    scale: [0.7, 0.58, 0.48],
+    speed: 0.48,
+  },
 ];
 
-const sparks = Array.from({ length: 30 }, (_, index) => {
-  const angle = (index / 30) * Math.PI * 2;
-  const radius = 0.72 + (index % 5) * 0.07;
+const navItems = [
+  { label: 'Work', href: '/profile#projects' },
+  { label: 'Systems', href: '/profile#about' },
+  { label: 'Profile', href: '/profile' },
+  { label: 'Contact', href: '/profile#contact' },
+  { label: 'GitHub', href: profileSummary.githubUrl, external: true },
+  { label: 'LinkedIn', href: profileSummary.linkedinUrl, external: true },
+];
+
+const sparks = Array.from({ length: 44 }, (_, index) => {
+  const angle = (index / 44) * Math.PI * 2;
+  const radius = 0.86 + (index % 6) * 0.08;
 
   return {
     id: index,
+    color: index % 5 === 0 ? '#fef3c7' : index % 2 === 0 ? '#67e8f9' : '#d8b4fe',
     position: [
       Math.cos(angle) * radius,
-      Math.sin(angle * 1.7) * 0.22,
-      Math.sin(angle) * radius * 0.58,
+      Math.sin(angle * 1.35) * 0.28,
+      Math.sin(angle) * radius * 0.54,
     ] as const,
-    size: index % 4 === 0 ? 0.014 : 0.009,
-    color: index % 5 === 0 ? '#fed7aa' : index % 2 === 0 ? '#67e8f9' : '#f0abfc',
+    size: index % 5 === 0 ? 0.016 : 0.01,
   };
 });
 
-const orbVertexShader = `
+const signalVertexShader = `
   varying vec2 vUv;
   varying vec3 vNormal;
   uniform float uTime;
@@ -56,30 +109,31 @@ const orbVertexShader = `
   void main() {
     vUv = uv;
     vNormal = normalize(normalMatrix * normal);
-    vec3 displaced = position + normal * (sin((uv.y * 18.0) + uTime * 1.9) * 0.025 * uPulse);
+    float wave = sin((uv.y * 11.0) + uTime * 0.9) + cos((uv.x * 14.0) - uTime * 0.7);
+    vec3 displaced = position + normal * wave * 0.045 * uPulse;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(displaced, 1.0);
   }
 `;
 
-const orbFragmentShader = `
+const signalFragmentShader = `
   varying vec2 vUv;
   varying vec3 vNormal;
   uniform float uTime;
-  uniform vec3 uAqua;
-  uniform vec3 uViolet;
-  uniform vec3 uFlame;
+  uniform vec3 uA;
+  uniform vec3 uB;
+  uniform vec3 uC;
 
   void main() {
     vec2 center = vUv - 0.5;
     float angle = atan(center.y, center.x);
     float radius = length(center);
-    float swirl = sin(angle * 6.0 + radius * 20.0 - uTime * 2.35);
-    float counter = sin(angle * -4.0 + radius * 26.0 + uTime * 1.55);
-    float veins = smoothstep(0.55, 0.96, max(swirl, counter));
-    float rim = pow(1.0 - abs(dot(normalize(vNormal), vec3(0.0, 0.0, 1.0))), 1.55);
-    vec3 color = mix(uViolet, uAqua, smoothstep(-0.25, 0.85, swirl));
-    color = mix(color, uFlame, smoothstep(0.62, 1.0, counter) * 0.72);
-    float alpha = 0.16 + veins * 0.5 + rim * 0.35;
+    float sweep = sin(angle * 3.0 + radius * 18.0 - uTime * 0.82);
+    float counter = cos(angle * -5.0 + radius * 13.0 + uTime * 0.56);
+    float haze = smoothstep(0.08, 0.7, 1.0 - radius);
+    float rim = pow(1.0 - abs(dot(normalize(vNormal), vec3(0.0, 0.0, 1.0))), 1.2);
+    vec3 color = mix(uB, uA, smoothstep(-0.44, 0.78, sweep));
+    color = mix(color, uC, smoothstep(0.34, 1.0, counter) * 0.72);
+    float alpha = 0.14 + haze * 0.26 + rim * 0.42;
     gl_FragColor = vec4(color, alpha);
   }
 `;
@@ -87,18 +141,18 @@ const orbFragmentShader = `
 const useGlowTexture = () =>
   useMemo(() => {
     const canvas = document.createElement('canvas');
-    canvas.width = 256;
-    canvas.height = 256;
+    canvas.width = 384;
+    canvas.height = 384;
     const context = canvas.getContext('2d');
 
     if (context) {
-      const gradient = context.createRadialGradient(128, 128, 6, 128, 128, 128);
-      gradient.addColorStop(0, 'rgba(255,255,255,1)');
-      gradient.addColorStop(0.18, 'rgba(244,114,250,0.78)');
-      gradient.addColorStop(0.48, 'rgba(34,211,238,0.38)');
-      gradient.addColorStop(1, 'rgba(34,211,238,0)');
+      const gradient = context.createRadialGradient(192, 192, 6, 192, 192, 192);
+      gradient.addColorStop(0, 'rgba(255,255,255,0.95)');
+      gradient.addColorStop(0.18, 'rgba(103,232,249,0.68)');
+      gradient.addColorStop(0.48, 'rgba(168,85,247,0.38)');
+      gradient.addColorStop(1, 'rgba(15,23,42,0)');
       context.fillStyle = gradient;
-      context.fillRect(0, 0, 256, 256);
+      context.fillRect(0, 0, 384, 384);
     }
 
     const texture = new THREE.CanvasTexture(canvas);
@@ -106,103 +160,115 @@ const useGlowTexture = () =>
     return texture;
   }, []);
 
-const EnergyOrb = ({ config, reducedMotion }: { config: OrbConfig; reducedMotion: boolean }) => {
-  const groupRef = useRef<THREE.Group>(null);
+const SignalForm = ({
+  config,
+  reducedMotion,
+}: {
+  config: SignalFormConfig;
+  reducedMotion: boolean;
+}) => {
+  const formRef = useRef<THREE.Group>(null);
   const shellRef = useRef<THREE.ShaderMaterial>(null);
-  const ribbonRef = useRef<THREE.Group>(null);
+  const orbitRef = useRef<THREE.Group>(null);
   const glowTexture = useGlowTexture();
   const shaderArgs = useMemo<THREE.ShaderMaterialParameters>(
     () => ({
-      uniforms: {
-        uTime: { value: config.phase },
-        uPulse: { value: config.scale },
-        uAqua: { value: new THREE.Color('#35e6ff') },
-        uViolet: { value: new THREE.Color('#a855f7') },
-        uFlame: { value: new THREE.Color('#fb923c') },
-      },
-      vertexShader: orbVertexShader,
-      fragmentShader: orbFragmentShader,
-      transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false,
+      fragmentShader: signalFragmentShader,
       side: THREE.DoubleSide,
+      transparent: true,
+      uniforms: {
+        uA: { value: new THREE.Color(config.colorA) },
+        uB: { value: new THREE.Color(config.colorB) },
+        uC: { value: new THREE.Color(config.colorC) },
+        uPulse: { value: config.scale[0] },
+        uTime: { value: config.phase },
+      },
+      vertexShader: signalVertexShader,
     }),
-    [config.phase, config.scale],
+    [config.colorA, config.colorB, config.colorC, config.phase, config.scale],
   );
 
   useFrame(({ clock, pointer }) => {
     const elapsed = clock.elapsedTime;
-    const motion = reducedMotion ? 0 : elapsed * config.speed + config.phase;
+    const motion = reducedMotion ? config.phase : elapsed * config.speed + config.phase;
 
-    if (groupRef.current) {
-      const x = config.basePosition[0] + Math.sin(motion * 0.72) * config.drift[0] + pointer.x * 0.1;
-      const y = config.basePosition[1] + Math.sin(motion * 1.12 + 0.7) * config.drift[1] + pointer.y * 0.08;
-      const z = config.basePosition[2] + Math.cos(motion * 0.82) * config.drift[2];
-      groupRef.current.position.set(x, y, z);
-      groupRef.current.rotation.x = Math.sin(motion * 0.42) * 0.2;
-      groupRef.current.rotation.y = motion * 0.42;
-      groupRef.current.rotation.z = Math.cos(motion * 0.36) * 0.14;
-      groupRef.current.scale.setScalar(config.scale * (1 + Math.sin(motion * 1.7) * 0.028));
+    if (formRef.current) {
+      formRef.current.position.set(
+        config.basePosition[0] + Math.sin(motion * 0.62) * config.drift[0] + pointer.x * 0.12,
+        config.basePosition[1] + Math.cos(motion * 0.74) * config.drift[1] + pointer.y * 0.09,
+        config.basePosition[2] + Math.sin(motion * 0.42) * config.drift[2],
+      );
+      formRef.current.rotation.x = Math.sin(motion * 0.3) * 0.18;
+      formRef.current.rotation.y = motion * 0.28;
+      formRef.current.rotation.z = Math.cos(motion * 0.24) * 0.14;
+      formRef.current.scale.set(
+        config.scale[0] * (1 + Math.sin(motion * 1.1) * 0.025),
+        config.scale[1] * (1 + Math.cos(motion * 0.9) * 0.025),
+        config.scale[2],
+      );
     }
 
     if (shellRef.current) {
       shellRef.current.uniforms.uTime.value = elapsed + config.phase;
     }
 
-    if (ribbonRef.current) {
-      ribbonRef.current.rotation.x = motion * 0.34;
-      ribbonRef.current.rotation.y = -motion * 0.48;
+    if (orbitRef.current) {
+      orbitRef.current.rotation.x = motion * 0.18;
+      orbitRef.current.rotation.y = -motion * 0.22;
     }
   });
 
   return (
-    <group ref={groupRef}>
-      <sprite scale={[2.95, 2.95, 1]}>
-        <spriteMaterial map={glowTexture} color="#8b5cf6" blending={THREE.AdditiveBlending} depthWrite={false} transparent opacity={0.56} />
-      </sprite>
-
-      <mesh>
-        <sphereGeometry args={[0.58, 64, 64]} />
-        <meshPhysicalMaterial
-          color="#dffcff"
-          emissive="#22d3ee"
-          emissiveIntensity={0.28}
-          metalness={0}
-          opacity={0.12}
-          roughness={0.02}
-          transmission={0.72}
-          transparent
+    <group ref={formRef}>
+      <sprite scale={[2.6, 2.6, 1]}>
+        <spriteMaterial
           blending={THREE.AdditiveBlending}
+          color={config.colorB}
           depthWrite={false}
+          map={glowTexture}
+          opacity={0.5}
+          transparent
         />
-      </mesh>
+      </sprite>
 
       <mesh>
         <sphereGeometry args={[0.62, 96, 96]} />
         <shaderMaterial ref={shellRef} args={[shaderArgs]} />
       </mesh>
 
-      <sprite scale={[0.86, 0.86, 1]}>
-        <spriteMaterial map={glowTexture} color="#fff7ed" blending={THREE.AdditiveBlending} depthWrite={false} transparent opacity={0.82} />
-      </sprite>
-
-      <mesh scale={[0.11, 0.11, 0.11]}>
+      <mesh scale={[0.18, 0.18, 0.18]}>
         <sphereGeometry args={[1, 32, 32]} />
-        <meshBasicMaterial color="#fff7ed" blending={THREE.AdditiveBlending} transparent opacity={0.92} depthWrite={false} />
+        <meshBasicMaterial
+          blending={THREE.AdditiveBlending}
+          color="#fff7ed"
+          depthWrite={false}
+          opacity={0.74}
+          transparent
+        />
       </mesh>
 
-      <group ref={ribbonRef} scale={[0.9, 0.9, 0.9]}>
-        <mesh rotation={[Math.PI / 2.2, 0.2, 0.25]}>
-          <torusKnotGeometry args={[0.43, 0.007, 220, 10, 2, 5]} />
-          <meshBasicMaterial color="#38bdf8" blending={THREE.AdditiveBlending} transparent opacity={0.42} depthWrite={false} />
+      <group ref={orbitRef}>
+        <mesh rotation={[Math.PI / 2.3, 0.18, 0.16]}>
+          <torusKnotGeometry args={[0.56, 0.006, 240, 10, 2, 5]} />
+          <meshBasicMaterial
+            blending={THREE.AdditiveBlending}
+            color={config.colorA}
+            depthWrite={false}
+            opacity={0.3}
+            transparent
+          />
         </mesh>
-        <mesh rotation={[Math.PI / 2.75, Math.PI / 3, -0.28]}>
-          <torusKnotGeometry args={[0.45, 0.006, 220, 10, 3, 4]} />
-          <meshBasicMaterial color="#e879f9" blending={THREE.AdditiveBlending} transparent opacity={0.36} depthWrite={false} />
-        </mesh>
-        <mesh rotation={[Math.PI / 1.75, -Math.PI / 5, 0.18]}>
-          <torusGeometry args={[0.54, 0.006, 12, 180]} />
-          <meshBasicMaterial color="#fb923c" blending={THREE.AdditiveBlending} transparent opacity={0.34} depthWrite={false} />
+        <mesh rotation={[Math.PI / 2.1, Math.PI / 3, -0.22]}>
+          <torusGeometry args={[0.7, 0.005, 12, 200]} />
+          <meshBasicMaterial
+            blending={THREE.AdditiveBlending}
+            color={config.colorC}
+            depthWrite={false}
+            opacity={0.24}
+            transparent
+          />
         </mesh>
       </group>
 
@@ -210,7 +276,13 @@ const EnergyOrb = ({ config, reducedMotion }: { config: OrbConfig; reducedMotion
         {sparks.map((spark) => (
           <mesh key={`${config.id}-${spark.id}`} position={spark.position}>
             <sphereGeometry args={[spark.size, 10, 10]} />
-            <meshBasicMaterial color={spark.color} blending={THREE.AdditiveBlending} transparent opacity={0.86} depthWrite={false} />
+            <meshBasicMaterial
+              blending={THREE.AdditiveBlending}
+              color={spark.color}
+              depthWrite={false}
+              opacity={0.78}
+              transparent
+            />
           </mesh>
         ))}
       </group>
@@ -218,35 +290,35 @@ const EnergyOrb = ({ config, reducedMotion }: { config: OrbConfig; reducedMotion
   );
 };
 
-const OrbField = ({ reducedMotion }: { reducedMotion: boolean }) => {
+const SignalField = ({ reducedMotion }: { reducedMotion: boolean }) => {
   const rootRef = useRef<THREE.Group>(null);
 
   useFrame(({ clock, pointer }) => {
     if (!rootRef.current) return;
+
     const elapsed = reducedMotion ? 0 : clock.elapsedTime;
-    rootRef.current.rotation.x = -0.1 + pointer.y * 0.08;
-    rootRef.current.rotation.y = Math.sin(elapsed * 0.12) * 0.08 + pointer.x * 0.12;
+    rootRef.current.rotation.x = -0.08 + pointer.y * 0.08;
+    rootRef.current.rotation.y = Math.sin(elapsed * 0.08) * 0.08 + pointer.x * 0.12;
   });
 
   return (
     <group ref={rootRef}>
-      <pointLight color="#38bdf8" intensity={7.8} distance={8} position={[-1.8, 1.6, 2.3]} />
-      <pointLight color="#e879f9" intensity={7} distance={7} position={[2.2, 0.2, 2.1]} />
-      <pointLight color="#fb923c" intensity={4.4} distance={6} position={[0.8, -1.8, 1.9]} />
-      {orbConfigs.map((config) => (
-        <EnergyOrb key={config.id} config={config} reducedMotion={reducedMotion} />
+      <pointLight color="#67e8f9" distance={10} intensity={8} position={[-2.4, 1.4, 3]} />
+      <pointLight color="#a855f7" distance={9} intensity={7} position={[2.4, 0.4, 2.5]} />
+      <pointLight color="#f59e0b" distance={7} intensity={4} position={[0.6, -1.8, 2.1]} />
+      {signalForms.map((config) => (
+        <SignalForm config={config} key={config.id} reducedMotion={reducedMotion} />
       ))}
     </group>
   );
 };
 
 const FallbackCore = () => (
-  <div className="absolute inset-0 grid place-items-center bg-[#050b0c]">
-    <div className="relative h-[74vmin] w-[74vmin]">
-      <div className="absolute inset-[4%] rounded-full bg-cyan-300/20 blur-3xl" />
-      <div className="absolute inset-[11%] rounded-full border border-cyan-200/40 shadow-[0_0_120px_rgba(34,211,238,0.38)]" />
-      <div className="absolute inset-[23%] rounded-full border border-fuchsia-300/40 shadow-[0_0_90px_rgba(217,70,239,0.32)]" />
-      <div className="absolute inset-[38%] rounded-full bg-orange-200/40 blur-xl" />
+  <div className="absolute inset-0 grid place-items-center bg-[#03050a]">
+    <div className="relative h-[82vmin] w-[82vmin]">
+      <div className="absolute inset-[3%] rounded-full bg-cyan-300/20 blur-3xl" />
+      <div className="absolute inset-[18%] rounded-full bg-violet-500/30 blur-3xl" />
+      <div className="absolute inset-[36%] rounded-full bg-amber-200/40 blur-2xl" />
     </div>
   </div>
 );
@@ -264,47 +336,173 @@ const LandingScene = () => {
   }
 
   return (
-    <Canvas camera={{ position: [0, 0, 6.4], fov: 44 }} dpr={[1, 1.7]} gl={{ antialias: true, alpha: false }}>
+    <Canvas
+      camera={{ fov: 42, position: [0, 0, 6.2] }}
+      dpr={[1, 1.7]}
+      gl={{ alpha: false, antialias: true }}
+    >
       <Suspense fallback={null}>
-        <color attach="background" args={['#03050a']} />
-        <fog attach="fog" args={['#03050a', 5.6, 11]} />
-        <ambientLight intensity={0.2} />
-        <directionalLight position={[2.4, 3.8, 4.2]} intensity={0.7} />
-        <OrbField reducedMotion={Boolean(prefersReducedMotion)} />
+        <color args={['#03050a']} attach="background" />
+        <fog args={['#03050a', 5.4, 11]} attach="fog" />
+        <ambientLight intensity={0.18} />
+        <directionalLight intensity={0.54} position={[2.8, 3.8, 4.6]} />
+        <SignalField reducedMotion={Boolean(prefersReducedMotion)} />
         <Environment preset="city" />
       </Suspense>
     </Canvas>
   );
 };
 
-const LandingPage = () => {
+const LandingNavLink = ({
+  external,
+  href,
+  label,
+  onClick,
+}: {
+  external?: boolean;
+  href: string;
+  label: string;
+  onClick?: () => void;
+}) => {
+  const className =
+    'rounded-sm text-sm font-black uppercase tracking-[0.18em] text-white transition hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#03050a]';
+
+  if (external) {
+    return (
+      <a className={className} href={href} rel="noreferrer" target="_blank">
+        {label}
+      </a>
+    );
+  }
+
   return (
-    <div className="min-h-screen overflow-hidden bg-[#03050a] text-white">
-      <section id="intro" className="relative min-h-screen overflow-hidden">
+    <Link className={className} onClick={onClick} to={href}>
+      {label}
+    </Link>
+  );
+};
+
+const LandingPage = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [cursorPosition, setCursorPosition] = useState({ x: -80, y: -80 });
+
+  return (
+    <div
+      className="min-h-screen overflow-hidden bg-[#03050a] text-white"
+      onMouseMove={(event) => {
+        setCursorPosition({ x: event.clientX, y: event.clientY });
+      }}
+    >
+      <section className="relative h-screen min-h-[640px] overflow-hidden">
         <div className="absolute inset-0">
           <LandingScene />
         </div>
 
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_68%_45%,rgba(217,70,239,0.12),transparent_30%),radial-gradient(circle_at_76%_18%,rgba(34,211,238,0.11),transparent_26%),linear-gradient(90deg,rgba(3,5,10,0.88)_0%,rgba(3,5,10,0.38)_45%,rgba(3,5,10,0.08)_100%)]" />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[48vh] bg-gradient-to-t from-[#03050a] via-[#03050a]/72 to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_78%_22%,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_64%_54%,rgba(168,85,247,0.18),transparent_34%),linear-gradient(90deg,rgba(3,5,10,0.94)_0%,rgba(3,5,10,0.5)_42%,rgba(3,5,10,0.1)_100%)]" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[44vh] bg-gradient-to-t from-[#03050a] via-[#03050a]/74 to-transparent" />
 
-        <div className="relative z-10 mx-auto flex min-h-screen max-w-6xl items-end px-5 pb-12 pt-28 md:px-8 md:pb-16">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: 'easeOut' }}
-            className="flex w-full flex-col gap-5 sm:w-auto"
+        <motion.header
+          animate={{ opacity: 1, y: 0 }}
+          className="absolute inset-x-0 top-0 z-20 flex items-start justify-between px-5 pt-6 md:px-10 md:pt-8"
+          initial={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.55, ease: 'easeOut' }}
+        >
+          <Link
+            className="rounded-sm text-lg font-black uppercase tracking-[0.28em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#03050a] md:text-xl"
+            to="/profile"
           >
-            <p className="text-sm font-black uppercase tracking-[0.32em] text-teal-200">Rob Meyer</p>
+            R0BFOLIO
+          </Link>
+          <div className="hidden max-w-[260px] text-right text-[11px] font-bold uppercase leading-5 tracking-[0.2em] text-cyan-100/78 md:block">
+            Product systems / practical AI / delivery signal
+          </div>
+        </motion.header>
+
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="pointer-events-none absolute left-5 top-[54%] z-10 max-w-[330px] -translate-y-1/2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] md:left-10"
+          initial={{ opacity: 0, y: 18 }}
+          transition={{ delay: 0.12, duration: 0.65, ease: 'easeOut' }}
+        >
+          <p className="text-xs font-black uppercase tracking-[0.32em] text-cyan-200/90">
+            Rob Meyer
+          </p>
+          <p className="mt-4 text-3xl font-black uppercase leading-none tracking-normal text-white sm:text-5xl">
+            Signal over noise.
+          </p>
+        </motion.div>
+
+        <motion.nav
+          animate={{ opacity: 1, y: 0 }}
+          aria-label="Landing navigation"
+          className="absolute inset-0 z-20 hidden items-end px-10 pb-8 md:flex"
+          initial={{ opacity: 0, y: 16 }}
+          transition={{ delay: 0.22, duration: 0.55, ease: 'easeOut' }}
+        >
+          <div className="grid w-full grid-cols-[auto_repeat(6,minmax(0,1fr))] items-center gap-7">
             <Link
+              aria-label="Enter portfolio"
+              className="grid size-9 place-items-center rounded-sm text-4xl font-light leading-none text-white transition hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#03050a]"
               to="/profile"
-              className="inline-flex min-h-12 w-fit items-center justify-center gap-2 rounded-full bg-white px-6 text-sm font-black uppercase tracking-[0.14em] text-slate-950 shadow-[0_0_38px_rgba(34,211,238,0.28)] transition hover:bg-cyan-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#03050a]"
             >
-              Enter portfolio
-              <ArrowUpRight className="h-4 w-4" />
+              +
             </Link>
-          </motion.div>
+            {navItems.map((item) => (
+              <LandingNavLink
+                external={item.external}
+                href={item.href}
+                key={item.label}
+                label={item.label}
+              />
+            ))}
+          </div>
+        </motion.nav>
+
+        <div className="absolute inset-0 z-30 flex items-end justify-center pb-6 md:hidden">
+          <button
+            className="inline-flex h-11 items-center gap-2 rounded-sm px-4 text-sm font-black uppercase tracking-[0.18em] text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#03050a]"
+            onClick={() => setMenuOpen(true)}
+            type="button"
+          >
+            <Menu className="h-4 w-4" />
+            Menu
+          </button>
         </div>
+
+        {menuOpen && (
+          <motion.div
+            animate={{ opacity: 1 }}
+            className="fixed inset-0 z-50 grid place-items-center bg-[#03050a]/94 px-6 backdrop-blur-xl md:hidden"
+            initial={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+          >
+            <button
+              aria-label="Close menu"
+              className="absolute right-5 top-5 grid size-11 place-items-center rounded-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#03050a]"
+              onClick={() => setMenuOpen(false)}
+              type="button"
+            >
+              <X className="h-5 w-5" />
+            </button>
+            <nav aria-label="Mobile landing navigation" className="grid gap-8 text-center">
+              {navItems.map((item) => (
+                <LandingNavLink
+                  external={item.external}
+                  href={item.href}
+                  key={item.label}
+                  label={item.label}
+                  onClick={() => setMenuOpen(false)}
+                />
+              ))}
+            </nav>
+          </motion.div>
+        )}
+
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed z-40 hidden size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/80 mix-blend-screen md:block"
+          style={{ left: cursorPosition.x, top: cursorPosition.y }}
+        />
       </section>
     </div>
   );
