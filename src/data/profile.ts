@@ -12,8 +12,8 @@ export const profileSummary: ProfileSummary = {
   location: 'Columbus, OH',
   email: 'rob.a.meyer@outlook.com',
   githubUrl: 'https://github.com/rmeyer1',
-  linkedinUrl: 'https://www.linkedin.com/in/robmeyer03/',
-  resumeUrl: '#contact',
+  linkedinUrl: 'https://www.linkedin.com/in/rob-meyer-3a800071/',
+  resumeUrl: '/files/Rob_Meyer_Resume_2026.pdf',
   intro:
     'I help teams reduce manual effort, improve delivery visibility, and turn complex technical work into clear business outcomes.',
 };
@@ -40,10 +40,10 @@ export const intentPaths: IntentPath[] = [
 export const proofMetrics: ProofMetric[] = [
   {
     id: 'experience',
-    value: '10+',
-    label: 'Years in software delivery',
+    value: 'Engineering',
+    label: 'Software development and Automation',
     description:
-      'Hands-on automation work, technical leadership, team mentoring, and delivery ownership across multiple business verticals.',
+      'Technical leadership, team mentoring, and delivery ownership across enterprise product teams, with a focus on turning complex work into reliable software outcomes.',
   },
   {
     id: 'product',
