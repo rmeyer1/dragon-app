@@ -248,12 +248,12 @@ const LandingPage = () => {
 
         <motion.header
           animate={{ opacity: 1, y: 0 }}
-          className="absolute bottom-7 left-5 z-20 md:bottom-8 md:left-10"
-          initial={{ opacity: 0, y: 10 }}
-          transition={{ duration: 0.55, ease: 'easeOut' }}
+          className="absolute left-5 top-[54%] z-20 -translate-y-1/2 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] md:left-10"
+          initial={{ opacity: 0, y: 18 }}
+          transition={{ delay: 0.12, duration: 0.65, ease: 'easeOut' }}
         >
           <Link
-            className="rounded-sm text-sm font-black uppercase tracking-[0.18em] text-white transition hover:text-cyan-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#020611] md:text-lg md:tracking-[0.22em]"
+            className="rounded-sm text-xs font-black uppercase tracking-[0.32em] text-cyan-200/90 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-200 focus-visible:ring-offset-4 focus-visible:ring-offset-[#020611]"
             to="/profile"
           >
             Rob Meyer
