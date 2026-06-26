@@ -8,23 +8,23 @@ import type {
 
 export const profileSummary: ProfileSummary = {
   name: 'Rob Meyer',
-  headline: 'Engineering & Product leader focused on enterprise software delivery, product enablement, and practical AI workflows for software teams.',
+  headline: 'Engineering & Product leader focused on enterprise AI implementation, agentic workflows, and software delivery systems for product teams.',
   location: 'Columbus, OH',
   email: 'rob.a.meyer@outlook.com',
   githubUrl: 'https://github.com/rmeyer1',
   linkedinUrl: 'https://www.linkedin.com/in/rob-meyer-3a800071/',
   resumeUrl: '/files/Rob_Meyer_Resume_2026.pdf',
   intro:
-    'I help teams reduce manual effort, improve delivery visibility, and turn complex technical work into clear business outcomes.',
+    'I help teams turn ambiguous business problems into working software: AI-assisted workflows, agent pilots, delivery systems, and the operating model needed to make them stick.',
 };
 
 export const intentPaths: IntentPath[] = [
   {
     id: 'hire',
     label: 'Hire me',
-    title: 'For teams hiring technical product builders',
+    title: 'For teams hiring forward-deployed technical leaders',
     description:
-      'A senior quality engineer who can reason across product, automation, delivery risk, and the customer experience.',
+      'A hands-on engineering and product leader who can shape use cases, prototype workflows, and translate delivery risk into clear technical plans.',
     cta: 'Review my product profile',
   },
   {
@@ -32,7 +32,7 @@ export const intentPaths: IntentPath[] = [
     label: 'Work with me',
     title: 'For clients and collaborators',
     description:
-      'A builder who can turn ambiguous ideas into practical web products, prototypes, and decision-ready technical plans.',
+      'A builder who can turn ambiguous ideas into practical software, agentic workflow prototypes, and decision-ready implementation plans.',
     cta: 'Explore project fit',
   },
 ];
@@ -40,31 +40,31 @@ export const intentPaths: IntentPath[] = [
 export const proofMetrics: ProofMetric[] = [
   {
     id: 'experience',
-    value: 'Engineering',
-    label: 'Software development and Automation',
+    value: 'Delivery',
+    label: 'Enterprise AI implementation',
     description:
-      'Technical leadership, team mentoring, and delivery ownership across enterprise product teams, with a focus on turning complex work into reliable software outcomes.',
+      'Hands-on technical leadership across automation, agentic workflow pilots, delivery systems, and production-minded software implementation.',
   },
   {
     id: 'product',
     value: 'Product',
-    label: 'Backlogs, epics, and acceptance criteria',
+    label: 'Use-case shaping and product enablement',
     description:
-      'Experience turning business needs into clear engineering work, prioritized backlogs, and acceptance criteria teams can actually build against.',
+      'Translate business problems into scoped use cases, prioritized backlogs, acceptance criteria, and implementation plans teams can actually execute.',
   },
   {
     id: 'projects',
-    value: 'Discovery',
-    label: 'Customer and business insight',
+    value: 'FDE',
+    label: 'Forward-deployed execution',
     description:
-      'Worked with designers on UI direction, shaped A/B tests, conducted customer interviews, and translated operational gaps into software improvements.',
+      'Comfortable working close to stakeholders, uncovering operational gaps, prototyping solutions, and turning messy context into clear technical direction.',
   },
   {
     id: 'impact',
     value: 'Highlights',
-    label: 'Revenue-critical delivery',
+    label: 'AI and delivery outcomes',
     description:
-      'Led quality engineering for Online Checkout, a high-visibility product generating $20M-$25M per quarter. Won the 2023 CarMax Hackathon after leading Be My Co-Buyer and presenting the solution to multiple VPs and the CIO.',
+      'Led quality engineering for Online Checkout, a high-visibility product generating $20M-$25M per quarter. Won the 2023 CarMax Hackathon after leading Be My Co-Buyer from concept through executive presentation.',
   },
 ];
 
@@ -79,9 +79,9 @@ export const storyChapters: StoryChapter[] = [
   {
     id: 'ai',
     label: '02',
-    title: 'Practical AI workflows',
+    title: 'Agentic AI workflows',
     body:
-      'I am most interested in AI when it removes real delivery friction: clearer handoffs, faster feedback, better test coverage, and less manual coordination.',
+      'I am most interested in AI when it removes real delivery friction: agent-assisted planning, clearer handoffs, faster feedback, better coverage, and less manual coordination.',
   },
   {
     id: 'product',
@@ -111,9 +111,9 @@ export const caseStudyProjects: CaseStudyProject[] = [
   {
     id: 'signal-scribe',
     name: 'Signal Scribe',
-    tagline: 'SEC filing intelligence backend',
+    tagline: 'Agentic SEC filing intelligence backend',
     problem:
-      'A backend agent that turns official SEC EDGAR filings into structured, auditable financial intelligence for downstream apps and agent workflows.',
+      'A backend AI system that turns official SEC EDGAR filings into structured, auditable financial intelligence for downstream apps and agent workflows.',
     role:
       'Designed the backend architecture, SEC ingestion flow, structured analysis layer, persistence model, API surface, and optional MCP tooling.',
     outcome:

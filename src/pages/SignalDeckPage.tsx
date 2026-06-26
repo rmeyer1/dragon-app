@@ -24,8 +24,8 @@ const experienceHighlights = [
     period: 'Feb. 2026 - Present',
     details: [
       'Manage a 25-person engineering team across four business verticals.',
-      'Lead DevEx pilots that design, test, and deploy team-level AI agents.',
-      'Translate delivery progress and complex technical initiatives to key technical and business stakeholders.',
+      'Lead DevEx pilots for team-level AI agents, from use-case definition through testing, adoption planning, and deployment patterns.',
+      'Translate agentic AI initiatives, delivery progress, and technical tradeoffs to key business and engineering stakeholders.',
     ],
   },
   {
@@ -35,7 +35,7 @@ const experienceHighlights = [
     details: [
       'Supported 30+ quality engineers as an internal consultant and technical leader.',
       'Standardized UI and API automation on Microsoft Playwright with shared framework templates.',
-      'Prototyped AI-assisted quality workflows for test planning, execution support, and delivery visibility.',
+      'Prototyped AI-assisted quality workflows for test planning, execution support, delivery visibility, and repeatable team adoption.',
     ],
   },
   {
@@ -45,7 +45,7 @@ const experienceHighlights = [
     details: [
       'Led quality engineering for a revenue-critical online vehicle purchase product.',
       'Built a Playwright + Node.js automation framework integrated into Azure CI pipelines.',
-      'Designed 150+ automated workflows enabling full-application regression in about 20 minutes.',
+      'Designed 150+ automated workflows and reliability checks that reduced full-application regression to about 20 minutes.',
     ],
   },
   {
@@ -61,13 +61,15 @@ const experienceHighlights = [
 ];
 
 const competencyGroups = [
-  'Engineering Leadership',
-  'AI-Driven Transformation',
+  'Enterprise AI Implementation',
+  'Agentic AI Workflows',
+  'Solution Architecture',
+  'Use-Case Discovery',
   'DevEx Strategy',
-  'Technical Program Leadership',
-  'Metrics-Driven Delivery',
+  'AI Workflow Prototyping',
+  'Evaluation & Guardrails',
   'Platform & Workflow Automation',
-  'CI/CD & Cloud Delivery',
+  'Technical Product Leadership',
   'Executive Communication',
 ];
 
